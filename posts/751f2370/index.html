@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.youngzk.com","root":"/","scheme":"Pisces","version":"8.0.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="资源代码：https:&#x2F;&#x2F;github.com&#x2F;1160007652&#x2F;react-d3Demo：https:&#x2F;&#x2F;1160007652.github.io&#x2F;react-d3 简介D3 (或者叫 D3.js )是一个基于 web 标准的 JavaScript 可视化库. D3 可以借助 SVG, Canvas 以及 HTML 将你的数据生动的展现出来. D3 结合了强大的可视化交互技术以及数据驱动 D">
+<meta property="og:type" content="article">
+<meta property="og:title" content="D3 数据可视化">
+<meta property="og:url" content="https://blog.youngzk.com/posts/751f2370/index.html">
+<meta property="og:site_name" content="Muniz Blog">
+<meta property="og:description" content="资源代码：https:&#x2F;&#x2F;github.com&#x2F;1160007652&#x2F;react-d3Demo：https:&#x2F;&#x2F;1160007652.github.io&#x2F;react-d3 简介D3 (或者叫 D3.js )是一个基于 web 标准的 JavaScript 可视化库. D3 可以借助 SVG, Canvas 以及 HTML 将你的数据生动的展现出来. D3 结合了强大的可视化交互技术以及数据驱动 D">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-11-25T06:39:54.000Z">
+<meta property="article:modified_time" content="2020-11-08T05:52:40.784Z">
+<meta property="article:author" content="修心">
+<meta property="article:tag" content="react">
+<meta property="article:tag" content="d3">
+<meta property="article:tag" content="可视化">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.youngzk.com/posts/751f2370/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>D3 数据可视化 | Muniz Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Muniz Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B5%84%E6%BA%90"><span class="nav-number">1.</span> <span class="nav-text">资源</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%EF%BC%9Ahttps-github-com-1160007652-react-d3"><span class="nav-number">1.1.</span> <span class="nav-text">代码：https:&#x2F;&#x2F;github.com&#x2F;1160007652&#x2F;react-d3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Demo%EF%BC%9Ahttps-1160007652-github-io-react-d3"><span class="nav-number">1.2.</span> <span class="nav-text">Demo：https:&#x2F;&#x2F;1160007652.github.io&#x2F;react-d3</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#svg"><span class="nav-number">3.</span> <span class="nav-text">svg</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#svg-%E9%80%9F%E5%AD%A6"><span class="nav-number">4.</span> <span class="nav-text">svg 速学</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%87%E7%AD%BE"><span class="nav-number">4.1.</span> <span class="nav-text">标签</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7"><span class="nav-number">4.2.</span> <span class="nav-text">属性</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B1%E6%9C%89%E5%B1%9E%E6%80%A7"><span class="nav-number">4.2.1.</span> <span class="nav-text">共有属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#rect-%E5%B1%9E%E6%80%A7"><span class="nav-number">4.2.2.</span> <span class="nav-text">rect 属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#circle-%E5%B1%9E%E6%80%A7"><span class="nav-number">4.2.3.</span> <span class="nav-text">circle 属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ellipse-%E5%B1%9E%E6%80%A7"><span class="nav-number">4.2.4.</span> <span class="nav-text">ellipse 属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#line-%E5%B1%9E%E6%80%A7"><span class="nav-number">4.2.5.</span> <span class="nav-text">line 属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#polygon-%E5%B1%9E%E6%80%A7"><span class="nav-number">4.2.6.</span> <span class="nav-text">polygon 属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#polyline-%E5%B1%9E%E6%80%A7"><span class="nav-number">4.2.7.</span> <span class="nav-text">polyline 属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#path-%E5%B1%9E%E6%80%A7"><span class="nav-number">4.2.8.</span> <span class="nav-text">path 属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#text-%E5%B1%9E%E6%80%A7"><span class="nav-number">4.2.9.</span> <span class="nav-text">text 属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AB%A0%E8%8A%82%E5%B0%8F%E7%BB%93"><span class="nav-number">4.2.10.</span> <span class="nav-text">章节小结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#D3%E6%9E%84%E9%80%A0-%E5%A4%A7%E9%BB%84%E4%BA%BA"><span class="nav-number">5.</span> <span class="nav-text">D3构造-大黄人</span></a></li></ol></div>
+        </section>
+        <!--/noindex-->
+
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="修心"
+      src="//avatars0.githubusercontent.com/u/26641790?s=400&u=373947509a7a4d651004a36a88e6c7fed199129b&v=4">
+  <p class="site-author-name" itemprop="name">修心</p>
+  <div class="site-description" itemprop="description">修不被别人影响的心，修不被自己控制的心，修不被别人诱惑的心。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/1160007652" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;1160007652" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1160007652@qq.com" title="E-Mail → mailto:1160007652@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </section>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.youngzk.com/posts/751f2370/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="//avatars0.githubusercontent.com/u/26641790?s=400&u=373947509a7a4d651004a36a88e6c7fed199129b&v=4">
+      <meta itemprop="name" content="修心">
+      <meta itemprop="description" content="修不被别人影响的心，修不被自己控制的心，修不被别人诱惑的心。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Muniz Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          D3 数据可视化
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-11-25 14:39:54" itemprop="dateCreated datePublished" datetime="2018-11-25T14:39:54+08:00">2018-11-25</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-11-08 13:52:40" itemprop="dateModified" datetime="2020-11-08T13:52:40+08:00">2020-11-08</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><h4 id="代码：https-github-com-1160007652-react-d3"><a href="#代码：https-github-com-1160007652-react-d3" class="headerlink" title="代码：https://github.com/1160007652/react-d3"></a>代码：<a target="_blank" rel="noopener" href="https://github.com/1160007652/react-d3">https://github.com/1160007652/react-d3</a></h4><h4 id="Demo：https-1160007652-github-io-react-d3"><a href="#Demo：https-1160007652-github-io-react-d3" class="headerlink" title="Demo：https://1160007652.github.io/react-d3"></a>Demo：<a target="_blank" rel="noopener" href="https://1160007652.github.io/react-d3">https://1160007652.github.io/react-d3</a></h4><hr>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>D3 (或者叫 D3.js )是一个基于 web 标准的 JavaScript 可视化库. D3 可以借助 SVG, Canvas 以及 HTML 将你的数据生动的展现出来. D3 结合了强大的可视化交互技术以及数据驱动 DOM 的技术结合起来, 让你可以借助于现代浏览器的强大功能自由的对数据进行可视化.</p>
+<a id="more"></a>
+
+<h3 id="svg"><a href="#svg" class="headerlink" title="svg"></a>svg</h3><p>SVG 是使用 XML 来描述二维图形和绘图程序的语言。</p>
+<h3 id="svg-速学"><a href="#svg-速学" class="headerlink" title="svg 速学"></a>svg 速学</h3><h4 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h4><blockquote>
+<p>rect 矩型 \ circle 圆 \ ellipse 椭圆 \ line 直线 \ polygon 多边形 \ polyline 曲线 \ path 路径\ text 文字</p>
+</blockquote>
+<h4 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h4><h5 id="共有属性"><a href="#共有属性" class="headerlink" title="共有属性"></a>共有属性</h5><blockquote>
+<p>stroke 描边颜色 \ stroke-width 描边宽度<br>stroke-linecap 线条两端的样式 : butt 直角原状态 \ round 圆角状态 \ square 加长方角状态<br>stroke-dasharray 蚂蚁线<br>stroke-opacity 描边透明度 [ 0 - 1 ]</p>
+</blockquote>
+<blockquote>
+<p>fill 填充颜色<br>fill-opacity 填充透明度 [ 0 - 1 ]</p>
+</blockquote>
+<blockquote>
+<p>css-opacity 整个元素的透明度 [ 0 - 1 ]</p>
+</blockquote>
+<h5 id="rect-属性"><a href="#rect-属性" class="headerlink" title="rect 属性"></a>rect 属性</h5><blockquote>
+<p>x y : 起始点位置<br>rx ry : 可使矩形产生圆角<br>width : 宽带<br>height: 高度</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">rect</span> <span class="attr">x</span>=<span class="string">&quot;50&quot;</span> <span class="attr">y</span>=<span class="string">&quot;20&quot;</span> <span class="attr">rx</span>=<span class="string">&quot;20&quot;</span> <span class="attr">ry</span>=<span class="string">&quot;20&quot;</span> <span class="attr">width</span>=<span class="string">&quot;150&quot;</span> <span class="attr">height</span>=<span class="string">&quot;150&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">style</span>=<span class="string">&quot;fill:red;stroke:black;stroke-width:5;opacity:0.5&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="circle-属性"><a href="#circle-属性" class="headerlink" title="circle 属性"></a>circle 属性</h5><blockquote>
+<p>cx cy : 圆形的位置<br>r : 半径</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">circle</span> <span class="attr">cx</span>=<span class="string">&quot;100&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;50&quot;</span> <span class="attr">r</span>=<span class="string">&quot;40&quot;</span> <span class="attr">stroke</span>=<span class="string">&quot;black&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">stroke-width</span>=<span class="string">&quot;2&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;red&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="ellipse-属性"><a href="#ellipse-属性" class="headerlink" title="ellipse 属性"></a>ellipse 属性</h5><blockquote>
+<p>cx cy : 椭圆的位置<br>rx ry : 水平半径 垂直半径</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ellipse</span> <span class="attr">cx</span>=<span class="string">&quot;300&quot;</span> <span class="attr">cy</span>=<span class="string">&quot;80&quot;</span> <span class="attr">rx</span>=<span class="string">&quot;100&quot;</span> <span class="attr">ry</span>=<span class="string">&quot;50&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">style</span>=<span class="string">&quot;fill:yellow;stroke:purple;stroke-width:2&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="line-属性"><a href="#line-属性" class="headerlink" title="line 属性"></a>line 属性</h5><blockquote>
+<p>x1 y1 : 起始坐标<br>x2 y2 : 结束坐标</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">line</span> <span class="attr">x1</span>=<span class="string">&quot;0&quot;</span> <span class="attr">y1</span>=<span class="string">&quot;0&quot;</span> <span class="attr">x2</span>=<span class="string">&quot;200&quot;</span> <span class="attr">y2</span>=<span class="string">&quot;200&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">style</span>=<span class="string">&quot;stroke:rgb(255,0,0);stroke-width:2&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="polygon-属性"><a href="#polygon-属性" class="headerlink" title="polygon 属性"></a>polygon 属性</h5><blockquote>
+<p>points : 置入坐标点</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">polygon</span> <span class="attr">points</span>=<span class="string">&quot;220,10 300,210 170,250 123,234&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">style</span>=<span class="string">&quot;fill:lime;stroke:purple;stroke-width:1&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="polyline-属性"><a href="#polyline-属性" class="headerlink" title="polyline 属性"></a>polyline 属性</h5><blockquote>
+<p>points : 置入坐标点</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">polyline</span> <span class="attr">points</span>=<span class="string">&quot;20,20 40,25 60,40 80,120 120,140 200,180&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">style</span>=<span class="string">&quot;fill:none;stroke:black;stroke-width:3&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="path-属性"><a href="#path-属性" class="headerlink" title="path 属性"></a>path 属性</h5><p>路径规则：<br>M = moveto(M X,Y) ：将画笔移动到指定的坐标位置<br>L = lineto(L X,Y) ：画直线到指定的坐标位置<br>H = horizontal lineto(H X)：画水平线到指定的X坐标位置<br>V = vertical lineto(V Y)：画垂直线到指定的Y坐标位置<br>C = curveto(C X1,Y1,X2,Y2,ENDX,ENDY)：三次贝赛曲线<br>S = smooth curveto(S X2,Y2,ENDX,ENDY)<br>Q = quadratic Belzier curve(Q X,Y,ENDX,ENDY)：二次贝赛曲线<br>T = smooth quadratic Belzier curveto(T ENDX,ENDY)：映射<br>A = elliptical Arc(A RX,RY,XROTATION,FLAG1,FLAG2,X,Y)：弧线<br>Z = closepath()：关闭路径</p>
+<blockquote>
+<p>d : 存放路径规则</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">path</span> <span class="attr">d</span>=<span class="string">&quot;M150 0 L75 200 L225 200 Z&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h5 id="text-属性"><a href="#text-属性" class="headerlink" title="text 属性"></a>text 属性</h5><p>1、直接写出文字</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">text</span> <span class="attr">x</span>=<span class="string">&quot;0&quot;</span> <span class="attr">y</span>=<span class="string">&quot;15&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;red&quot;</span>&gt;</span>I love SVG<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>2、路径写文字</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span></span></span><br><span class="line"><span class="tag"><span class="attr">xmlns:xlink</span>=<span class="string">&quot;http://www.w3.org/1999/xlink&quot;</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">defs</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">path</span> <span class="attr">id</span>=<span class="string">&quot;path1&quot;</span> <span class="attr">d</span>=<span class="string">&quot;M75,20 a1,1 0 0,0 100,0&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">defs</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">text</span> <span class="attr">x</span>=<span class="string">&quot;10&quot;</span> <span class="attr">y</span>=<span class="string">&quot;100&quot;</span> <span class="attr">style</span>=<span class="string">&quot;fill:red;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">textPath</span> <span class="attr">xlink:href</span>=<span class="string">&quot;#path1&quot;</span>&gt;</span>I love SVG I love SVG<span class="tag">&lt;/<span class="name">textPath</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>3、多行文本</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">text</span> <span class="attr">x</span>=<span class="string">&quot;10&quot;</span> <span class="attr">y</span>=<span class="string">&quot;20&quot;</span> <span class="attr">style</span>=<span class="string">&quot;fill:red;&quot;</span>&gt;</span>Several lines:</span><br><span class="line">    <span class="tag">&lt;<span class="name">tspan</span> <span class="attr">x</span>=<span class="string">&quot;10&quot;</span> <span class="attr">y</span>=<span class="string">&quot;45&quot;</span>&gt;</span>First line<span class="tag">&lt;/<span class="name">tspan</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">tspan</span> <span class="attr">x</span>=<span class="string">&quot;10&quot;</span> <span class="attr">y</span>=<span class="string">&quot;70&quot;</span>&gt;</span>Second line<span class="tag">&lt;/<span class="name">tspan</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>3、文本点击跳转</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">svg</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="attr">version</span>=<span class="string">&quot;1.1&quot;</span></span></span><br><span class="line"><span class="tag"><span class="attr">xmlns:xlink</span>=<span class="string">&quot;http://www.w3.org/1999/xlink&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> <span class="attr">xlink:href</span>=<span class="string">&quot;http://www.w3schools.com/svg/&quot;</span> <span class="attr">target</span>=<span class="string">&quot;_blank&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">text</span> <span class="attr">x</span>=<span class="string">&quot;0&quot;</span> <span class="attr">y</span>=<span class="string">&quot;15&quot;</span> <span class="attr">fill</span>=<span class="string">&quot;red&quot;</span>&gt;</span>I love SVG<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="章节小结"><a href="#章节小结" class="headerlink" title="章节小结"></a>章节小结</h5><p>在学习 <strong>D3.js</strong> 时，我先进行了 <strong>svg</strong>  的了解。快速的学习了<strong>svg</strong>的标签及属性。</p>
+<h3 id="D3构造-大黄人"><a href="#D3构造-大黄人" class="headerlink" title="D3构造-大黄人"></a>D3构造-大黄人</h3><p>使用到的<strong>D3.js</strong> Api:</p>
+<ul>
+<li>select 选中元素</li>
+<li>arc 构造弧型</li>
+<li>append 添加新的svg元素</li>
+<li>attr 设置属性</li>
+<li>transition 动画</li>
+<li>duration 时间</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/1160007652/react-d3/blob/master/src/page/example-1-emot/index.js">点击获取 <strong>完整版</strong> 代码</a><br><a target="_blank" rel="noopener" href="https://1160007652.github.io/react-d3">demo 演示</a> 进入点击菜单 <strong>大黄人</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; select, arc&#125; <span class="keyword">from</span> <span class="string">&#x27;d3&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EmotSVG</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params">props</span>)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(props);</span><br><span class="line">        <span class="built_in">this</span>.refSvgDom = React.createRef();</span><br><span class="line">        <span class="built_in">this</span>.emotStyle = &#123;</span><br><span class="line">            emotWidth: <span class="number">900</span>,</span><br><span class="line">            emotHeight: <span class="number">500</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">componentDidMount</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.svg = select(<span class="built_in">this</span>.refSvgDom.current);</span><br><span class="line">        <span class="built_in">this</span>.draw();</span><br><span class="line">    &#125;</span><br><span class="line">    draw () &#123;</span><br><span class="line">        <span class="comment">// ......</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">render</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; emotWidth, emotHeight &#125; = <span class="built_in">this</span>.emotStyle;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            &lt;div className=<span class="string">&quot;example-emot&quot;</span>&gt;</span><br><span class="line">                &lt;svg  ref=&#123;<span class="built_in">this</span>.refSvgDom&#125; width=&#123;emotWidth&#125; height=&#123;emotHeight&#125; &gt;&lt;/svg&gt;</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> EmotSVG;</span><br></pre></td></tr></table></figure>
+
+<p>在画这个大黄人时，遇到的问题</p>
+<p>1、 选择dom</p>
+<blockquote>
+<p>使用React 提供的 <strong>React.createRef()</strong> APi, 获取Dom, 并且将Dom提供给D3使用。</p>
+</blockquote>
+<p>2、把绘制大黄人的方法抽离</p>
+<blockquote>
+<p>提供 draw() 绘制方法。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/react/" rel="tag"># react</a>
+              <a href="/tags/d3/" rel="tag"># d3</a>
+              <a href="/tags/%E5%8F%AF%E8%A7%86%E5%8C%96/" rel="tag"># 可视化</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/ab4a2db7/" rel="prev" title="鹰眼视频 (一)">
+                  <i class="fa fa-chevron-left"></i> 鹰眼视频 (一)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/554d6708/" rel="next" title="Electron-cer 跨平台证书安装">
+                  Electron-cer 跨平台证书安装 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">修心</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.youngzk.com","root":"/","scheme":"Pisces","version":"8.0.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="什么是 ElectronElectron 是前端开发者去构建跨平台桌面应用的一种方案。大家熟悉的 Atom 和 VSCode 编辑器就是使用 Electron 开发的。 Electron 是 Node.js 和 Chromium 浏览器的结合体，用 Chromium 浏览器显示出的 Web 页面作为应用的 GUI，通过 Node.js 去和操作系统交互。 当你在 Electron 应用中的一个窗口">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Electron 应用 （爱翻译）">
+<meta property="og:url" content="https://blog.youngzk.com/posts/e39f5ecb/index.html">
+<meta property="og:site_name" content="Muniz Blog">
+<meta property="og:description" content="什么是 ElectronElectron 是前端开发者去构建跨平台桌面应用的一种方案。大家熟悉的 Atom 和 VSCode 编辑器就是使用 Electron 开发的。 Electron 是 Node.js 和 Chromium 浏览器的结合体，用 Chromium 浏览器显示出的 Web 页面作为应用的 GUI，通过 Node.js 去和操作系统交互。 当你在 Electron 应用中的一个窗口">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-08-14T13:24:55.000Z">
+<meta property="article:modified_time" content="2020-11-08T05:56:01.194Z">
+<meta property="article:author" content="修心">
+<meta property="article:tag" content="electron">
+<meta property="article:tag" content="前端">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.youngzk.com/posts/e39f5ecb/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Electron 应用 （爱翻译） | Muniz Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Muniz Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Electron"><span class="nav-number">1.</span> <span class="nav-text">什么是 Electron</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Electron-%E7%9A%84%E8%BF%9B%E7%A8%8B%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">Electron 的进程问题？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%E3%80%81-%E4%B8%BB%E8%BF%9B%E7%A8%8B-Main-Process"><span class="nav-number">2.1.</span> <span class="nav-text">1、 主进程 Main Process</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%E3%80%81%E6%B8%B2%E6%9F%93%E8%BF%9B%E7%A8%8B-Render-Process"><span class="nav-number">2.2.</span> <span class="nav-text">2、渲染进程 Render Process</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3%E3%80%81%E4%B8%BB%E8%BF%9B%E7%A8%8B%E4%B8%8E%E6%B8%B2%E6%9F%93%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.3.</span> <span class="nav-text">3、主进程与渲染进程的关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4%E3%80%81%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1-%E4%B8%BB%E8%BF%9B%E7%A8%8B-%E6%B8%B2%E6%9F%93%E8%BF%9B%E7%A8%8B"><span class="nav-number">2.4.</span> <span class="nav-text">4、进程通信 [主进程-渲染进程]</span></a></li></ol></li></ol></div>
+        </section>
+        <!--/noindex-->
+
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="修心"
+      src="//avatars0.githubusercontent.com/u/26641790?s=400&u=373947509a7a4d651004a36a88e6c7fed199129b&v=4">
+  <p class="site-author-name" itemprop="name">修心</p>
+  <div class="site-description" itemprop="description">修不被别人影响的心，修不被自己控制的心，修不被别人诱惑的心。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/1160007652" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;1160007652" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1160007652@qq.com" title="E-Mail → mailto:1160007652@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </section>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.youngzk.com/posts/e39f5ecb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="//avatars0.githubusercontent.com/u/26641790?s=400&u=373947509a7a4d651004a36a88e6c7fed199129b&v=4">
+      <meta itemprop="name" content="修心">
+      <meta itemprop="description" content="修不被别人影响的心，修不被自己控制的心，修不被别人诱惑的心。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Muniz Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Electron 应用 （爱翻译）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-08-14 21:24:55" itemprop="dateCreated datePublished" datetime="2018-08-14T21:24:55+08:00">2018-08-14</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-11-08 13:56:01" itemprop="dateModified" datetime="2020-11-08T13:56:01+08:00">2020-11-08</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        
+
+<h3 id="什么是-Electron"><a href="#什么是-Electron" class="headerlink" title="什么是 Electron"></a>什么是 Electron</h3><p><a href="https://link.juejin.im/?target=https://electron.atom.io">Electron</a> 是前端开发者去构建跨平台桌面应用的一种方案。大家熟悉的 Atom 和 VSCode 编辑器就是使用 Electron 开发的。</p>
+<p><a href="https://link.juejin.im/?target=https://electron.atom.io">Electron</a> 是 Node.js 和 Chromium 浏览器的结合体，用 Chromium 浏览器显示出的 Web 页面作为应用的 GUI，通过 Node.js 去和操作系统交互。 当你在 Electron 应用中的一个窗口操作时，实际上是在操作一个网页。当你的操作需要通过操作系统去完成时，网页会通过 Node.js 去和操作系统交互。</p>
+<a id="more"></a>
+
+<p><a href="https://link.juejin.im/?target=https://electron.atom.io">Electron</a> 开发桌面端应用的优点有：</p>
+<ul>
+<li>降低开发门槛，减少了学习的成本，只需掌握前端技术和 Node.js 即可，不需要为开发一个桌面应用去学习其它的编程语言。</li>
+<li>由于 Chromium 浏览器和 Node.js 都是跨平台的，Electron 能做到写一份代码在不同的操作系统运行。</li>
+<li>而且可以使用 vue\react 等框架去开发 GUI，总之强大的生态系统还需要灵活的统筹能力，去组合。</li>
+</ul>
+<h3 id="Electron-的进程问题？"><a href="#Electron-的进程问题？" class="headerlink" title="Electron 的进程问题？"></a>Electron 的进程问题？</h3><h4 id="1、-主进程-Main-Process"><a href="#1、-主进程-Main-Process" class="headerlink" title="1、 主进程 Main Process"></a>1、 主进程 Main Process</h4><p>主进程，其实就是 electron 执行时，首次加载的可执行代码资源。我要渲染每个 GUI 页面，就需要有主进程去把控资源的分配、释放。那么在 Electron 中怎么确认我写的那个文件是主进程文件呢。<br>主进程加载的文件就是：packages.json 文件中的 main 字段指向的文件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">这是一份最基础的主进程代码;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123; app, BrowserWindow &#125; = <span class="built_in">require</span>(<span class="string">&quot;electron&quot;</span>);</span><br><span class="line"><span class="keyword">let</span> win;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createWindow</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  win = <span class="keyword">new</span> BrowserWindow(&#123; <span class="attr">width</span>: <span class="number">800</span>, <span class="attr">height</span>: <span class="number">600</span> &#125;);</span><br><span class="line">  <span class="keyword">const</span> indexPageURL = <span class="string">`file://<span class="subst">$&#123;__dirname&#125;</span>/dist/index.html`</span>;</span><br><span class="line">  win.loadURL(indexPageURL);</span><br><span class="line">  win.on(<span class="string">&quot;closed&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    win = <span class="literal">null</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line">app.on(<span class="string">&quot;ready&quot;</span>, createWindow);</span><br><span class="line">app.on(<span class="string">&quot;window-all-closed&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (process.platform !== <span class="string">&quot;darwin&quot;</span>) &#123;</span><br><span class="line">    app.quit();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、渲染进程-Render-Process"><a href="#2、渲染进程-Render-Process" class="headerlink" title="2、渲染进程 Render Process"></a>2、渲染进程 Render Process</h4><p>渲染进程，就是用来进行进行页面的渲染，在主进城创建好友，会调用渲染进程去渲染页面资源。渲染进程指向的资源也就是你构建好、要呈现视图的 HTML 前端代码资源文件。比如你使用 webpack 构建出来的 dist 文件夹里面的数据就是。<br>渲染进程也可以看作是浏览器的每一个页面，一个页面对应一个进程，是不相同的。渲染进程的创建需要由主进程 BrowserWindow 对象去创建。</p>
+<h4 id="3、主进程与渲染进程的关系"><a href="#3、主进程与渲染进程的关系" class="headerlink" title="3、主进程与渲染进程的关系"></a>3、主进程与渲染进程的关系</h4><ul>
+<li>主进程在创建好后，会在创建一个子进程去加载资源，资源可以是网路资源(网站地址)，也可以是本地资源(html 文件)。</li>
+<li>主进程在创建窗口对象后，才会通过子进程去加载资源，那么窗口创建是有相应的生命周期事件去触发的。详情见# <a target="_blank" rel="noopener" href="https://electronjs.org/docs/api/browser-window#browserwindow">BrowserWindow</a></li>
+</ul>
+<h4 id="4、进程通信-主进程-渲染进程"><a href="#4、进程通信-主进程-渲染进程" class="headerlink" title="4、进程通信 [主进程-渲染进程]"></a>4、进程通信 [主进程-渲染进程]</h4><p>我们在开发网页应用的时候，需要实现跨页面通信。可以使用<strong>localStorage</strong> 和 <strong>H5 postMessages</strong>。那么到了 electron 中同样适用，但是还有其它的方法去实现通信。就是进程通信！</p>
+<ul>
+<li>一种是使用<a target="_blank" rel="noopener" href="https://github.com/electron/electron/blob/v1.1.3/docs/api/ipc-main.md">ipcMain</a>和<a target="_blank" rel="noopener" href="https://github.com/electron/electron/blob/v1.1.3/docs/api/ipc-renderer.md">ipcRenderer</a>模块，在渲染进程中使用 ipcRender 模块向主进程发送消息，主进程中 ipcMain 接收消息，进行操作，如果还需要反馈，则通知渲染进程，渲染进程根据接收的内容执行相应的操作：</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">主进程;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123; app, BrowserWindow, ipcMain &#125; = <span class="built_in">require</span>(<span class="string">&quot;electron&quot;</span>);</span><br><span class="line"></span><br><span class="line">ipcMain.on(<span class="string">&quot;fy&quot;</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event, value</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; net &#125; = <span class="built_in">require</span>(<span class="string">&quot;electron&quot;</span>);</span><br><span class="line">  <span class="keyword">const</span> request = net.request(</span><br><span class="line">    <span class="string">&quot;http://translate.google.cn/translate_a/single?client=gtx&amp;dt=t&amp;ie=UTF-8&amp;oe=UTF-8&amp;sl=auto&amp;tl=en&amp;q=&quot;</span> +</span><br><span class="line">      value</span><br><span class="line">  );</span><br><span class="line">  request.on(<span class="string">&quot;response&quot;</span>, <span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</span><br><span class="line">    response.setEncoding(<span class="string">&quot;utf8&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> connect = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    response.on(<span class="string">&quot;data&quot;</span>, <span class="function">(<span class="params">chunk</span>) =&gt;</span> &#123;</span><br><span class="line">      connect = chunk;</span><br><span class="line">    &#125;);</span><br><span class="line">    response.on(<span class="string">&quot;end&quot;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      mainWindow.webContents.send(<span class="string">&quot;fymessage&quot;</span>, connect);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">  request.end();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">渲染进程;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; remote, dialog, ipcRenderer &#125; <span class="keyword">from</span> <span class="string">&quot;electron&quot;</span>;</span><br><span class="line"></span><br><span class="line">handleSearch = <span class="function">(<span class="params">value</span>) =&gt;</span> &#123;</span><br><span class="line">  ipcRenderer.send(<span class="string">&quot;fy&quot;</span>, value);</span><br><span class="line">  <span class="keyword">const</span> that = <span class="built_in">this</span>;</span><br><span class="line">  ipcRenderer.on(<span class="string">&quot;fymessage&quot;</span>, <span class="function">(<span class="params">event, text</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(text);</span><br><span class="line">    that.setState(&#123;</span><br><span class="line">      languageText: text.split(<span class="string">&#x27;&quot;,&#x27;</span>)[<span class="number">0</span>].replace(<span class="regexp">/\[\[\[\&quot;/g</span>, <span class="string">&quot;&quot;</span>),</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第二种是直接在渲染进程使用<a target="_blank" rel="noopener" href="http://electron.atom.io/docs/api/remote/">remote</a>模块，remote 模块可以直接获取主进程中的模块。这种方式其实是第一种方式的简化。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">通过remote对象调用主进程进行dialog操作。</span><br><span class="line"></span><br><span class="line"> remote.dialog.showErrorBox(<span class="string">&quot;翻译失败&quot;</span>, <span class="string">&quot;翻译内容不能为空，请重新执行&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>第三种是主进程向渲染进程发送消息</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mainWindow：是通过 <span class="keyword">new</span>  BrowserWindow(&#123;&#125;) 创建出来的窗口对象。</span><br><span class="line">mainWindow.webContents.send(<span class="string">&#x27;发送标识-类型判断&#x27;</span>, <span class="string">&#x27;发送内容&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第四种是渲染进程之间的通信</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 主进程</span></span><br><span class="line"><span class="comment">// 两个窗口互相获取对方的窗口 id, 并发送给渲染进程</span></span><br><span class="line">win1.webContents.send(<span class="string">&quot;distributeIds&quot;</span>, &#123;</span><br><span class="line">  win2Id: win2.id,</span><br><span class="line">&#125;);</span><br><span class="line">win2.webContents.send(<span class="string">&quot;distributeIds&quot;</span>, &#123;</span><br><span class="line">  win1Id: win1.id,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 渲染进程</span></span><br><span class="line"><span class="comment">// 通过 id 得到窗口</span></span><br><span class="line">remote.BrowserWindow.fromId(win2Id).webContents.send(<span class="string">&quot;someMsg&quot;</span>, <span class="string">&quot;someThing&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>总体来说，electron 开发不是很难，而是对浏览器的重新认识。<br>在上述的列子中，讲解了如何进程通信，也表述了 electron 的 net 模块，进行 http 通信。在这里我使用了谷歌的翻译接口，这个接口也是逆向分析出来的。怎么分析就不叙述了。这里只概述 electron 的知识体系。</p>
+<p>剩下就是 node 的各个模块操作了。在 electron 中调用 node 的模块。如 http,fs,等。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/electron/" rel="tag"># electron</a>
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/f8f5c654/" rel="next" title="基于mobx的表单验证(mobx-react-form)">
+                  基于mobx的表单验证(mobx-react-form) <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">修心</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

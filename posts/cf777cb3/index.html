@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.youngzk.com","root":"/","scheme":"Pisces","version":"8.0.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="DLL介绍DLL(Dynamic Link Library)文件为动态链接库文件，又称”应用程序拓展”，是软件文件类型。在Windows中，许多应用程序并不是一个完整的可执行文件，它们被分割成一些相对独立的动态链接库，即DLL文件，放置于系统中。当我们执行某一个程序时，相应的DLL文件就会被调用。一个应用程序可使用多个DLL文件，一个DLL文件也可能被不同的应用程序使用，这样的DLL文件被称为共享">
+<meta property="og:type" content="article">
+<meta property="og:title" content="node-dll 调用">
+<meta property="og:url" content="https://blog.youngzk.com/posts/cf777cb3/index.html">
+<meta property="og:site_name" content="Muniz Blog">
+<meta property="og:description" content="DLL介绍DLL(Dynamic Link Library)文件为动态链接库文件，又称”应用程序拓展”，是软件文件类型。在Windows中，许多应用程序并不是一个完整的可执行文件，它们被分割成一些相对独立的动态链接库，即DLL文件，放置于系统中。当我们执行某一个程序时，相应的DLL文件就会被调用。一个应用程序可使用多个DLL文件，一个DLL文件也可能被不同的应用程序使用，这样的DLL文件被称为共享">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.youngzk.com/posts/cf777cb3/node-dll-1.png">
+<meta property="og:image" content="https://blog.youngzk.com/posts/cf777cb3/node-dll-2.png">
+<meta property="og:image" content="https://blog.youngzk.com/posts/cf777cb3/node-dll-4.png">
+<meta property="og:image" content="https://blog.youngzk.com/posts/cf777cb3/node-dll-5.png">
+<meta property="og:image" content="https://blog.youngzk.com/posts/cf777cb3/node-dll-6.png">
+<meta property="og:image" content="https://blog.youngzk.com/posts/cf777cb3/node-dll-7.png">
+<meta property="article:published_time" content="2018-08-26T00:56:42.000Z">
+<meta property="article:modified_time" content="2020-11-08T05:52:40.782Z">
+<meta property="article:author" content="修心">
+<meta property="article:tag" content="node">
+<meta property="article:tag" content="dll">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.youngzk.com/posts/cf777cb3/node-dll-1.png">
+
+
+<link rel="canonical" href="https://blog.youngzk.com/posts/cf777cb3/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>node-dll 调用 | Muniz Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Muniz Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#DLL%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">DLL介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node-%E6%80%8E%E4%B9%88%E8%B0%83%E7%94%A8DLL"><span class="nav-number">2.</span> <span class="nav-text">Node 怎么调用DLL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85node-ffi%E6%A8%A1%E5%9D%97"><span class="nav-number">3.</span> <span class="nav-text">安装node-ffi模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85node-ffi-%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91"><span class="nav-number">4.</span> <span class="nav-text">安装node-ffi 遇到的坑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91DLL"><span class="nav-number">5.</span> <span class="nav-text">开发DLL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90DLL"><span class="nav-number">6.</span> <span class="nav-text">生成DLL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#node%E4%BD%BF%E7%94%A8DLL"><span class="nav-number">7.</span> <span class="nav-text">node使用DLL</span></a></li></ol></div>
+        </section>
+        <!--/noindex-->
+
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="修心"
+      src="//avatars0.githubusercontent.com/u/26641790?s=400&u=373947509a7a4d651004a36a88e6c7fed199129b&v=4">
+  <p class="site-author-name" itemprop="name">修心</p>
+  <div class="site-description" itemprop="description">修不被别人影响的心，修不被自己控制的心，修不被别人诱惑的心。</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/1160007652" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;1160007652" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1160007652@qq.com" title="E-Mail → mailto:1160007652@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </section>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.youngzk.com/posts/cf777cb3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="//avatars0.githubusercontent.com/u/26641790?s=400&u=373947509a7a4d651004a36a88e6c7fed199129b&v=4">
+      <meta itemprop="name" content="修心">
+      <meta itemprop="description" content="修不被别人影响的心，修不被自己控制的心，修不被别人诱惑的心。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Muniz Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          node-dll 调用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-08-26 08:56:42" itemprop="dateCreated datePublished" datetime="2018-08-26T08:56:42+08:00">2018-08-26</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2020-11-08 13:52:40" itemprop="dateModified" datetime="2020-11-08T13:52:40+08:00">2020-11-08</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="DLL介绍"><a href="#DLL介绍" class="headerlink" title="DLL介绍"></a>DLL介绍</h3><p>DLL(Dynamic Link Library)文件为动态链接库文件，又称”应用程序拓展”，是软件文件类型。在Windows中，许多应用程序并不是一个完整的可执行文件，它们被分割成一些相对独立的动态链接库，即DLL文件，放置于系统中。当我们执行某一个程序时，相应的DLL文件就会被调用。一个应用程序可使用多个DLL文件，一个DLL文件也可能被不同的应用程序使用，这样的DLL文件被称为共享DLL文件。</p>
+<h3 id="Node-怎么调用DLL"><a href="#Node-怎么调用DLL" class="headerlink" title="Node 怎么调用DLL"></a>Node 怎么调用DLL</h3><p>使用 node-ffi 模块，非常灵活的node中去调用dll中暴露的方法。</p>
+<a id="more"></a>
+
+<h3 id="安装node-ffi模块"><a href="#安装node-ffi模块" class="headerlink" title="安装node-ffi模块"></a>安装node-ffi模块</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/nodejs/node-gyp">Node-gyp</a><br><a target="_blank" rel="noopener" href="https://github.com/nodejs/node-gyp">https://github.com/nodejs/node-gyp</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/node-ffi/node-ffi">Node-ffi</a><br><a target="_blank" rel="noopener" href="https://github.com/node-ffi/node-ffi">https://github.com/node-ffi/node-ffi</a></p>
+</blockquote>
+<blockquote>
+<p>安装命令  npm install ffi</p>
+</blockquote>
+<p>** 在安装node-ffi模块前，必须保证node-gyp 安装成功，并且node-gyp可以使用 **</p>
+<h3 id="安装node-ffi-遇到的坑"><a href="#安装node-ffi-遇到的坑" class="headerlink" title="安装node-ffi 遇到的坑"></a>安装node-ffi 遇到的坑</h3><p>如果安装成功了，就看看我是怎么解决这个坑的吧。</p>
+<p>不知道是怎么回事，每次安装ffi模块，都会导致 node-gyp build  V8类型出错。</p>
+<p>** 解决方法：**<br>直接克隆node-ffi仓库到本地，把node-ffi 放到全局的 node-modules中。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git://github.com/node-ffi/node-ffi.git </span><br></pre></td></tr></table></figure>
+
+<p>再进入CMD命令窗口中，执行** npm install node-ffi –g **,即可成功安装。<br>安装完后，全局的 node-modules中会出现 快捷方式的 ffi文件夹。<br>需要创建一个ffi文件夹，并把快捷方式的 ffi文件夹内容剪切到 新的 ffi文件夹中，也就是去掉快捷方式即可。</p>
+<h3 id="开发DLL"><a href="#开发DLL" class="headerlink" title="开发DLL"></a>开发DLL</h3><blockquote>
+<p>开发DLL工具，我使用的是VS2015。</p>
+</blockquote>
+<p>** 步骤：b**</p>
+<p>开发DLL工具，我使用的是VS2015。<br>打开** VS2015 ** -&gt; ** 文件 ** -&gt; ** 新建 ** -&gt; ** 项目 ** -&gt; ** 选择Win32控制台应用程序 **</p>
+<img src="/posts/cf777cb3/node-dll-1.png" class="" title="创建项目">
+
+<img src="/posts/cf777cb3/node-dll-2.png" class="" title="应用程序向导">
+
+<p>选择 ** 下一步 **</p>
+
+
+<p>选择 ** 控制台应用程序 空项目 ** 最后点击 ** 完成 **</p>
+<img src="/posts/cf777cb3/node-dll-4.png" class="" title="应用程序向导">
+
+<p>右击** nodeFile ** 项目名称，选择 ** 添加 ** -&gt; ** 新建项 **</p>
+<img src="/posts/cf777cb3/node-dll-5.png" class="" title="应用程序向导">
+
+<p>选择 ** 头文件 **，名称我写的 ** fileChange.h **点击添加</p>
+<p>同理，相同的步骤创建C++文件（.cpp），名称fileChange.cpp 点击添加</p>
+<p>在源文件 ** fileChange.cpp ** 中编写代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// fileChange.cpp </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;fileChange.h&quot;</span></span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">//同步函数，求和方法</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> i + j;</span><br><span class="line">&#125;</span><br><span class="line">	<span class="comment">//异步函数，求和方法</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">addSync</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j, <span class="keyword">void</span> (*callfuct)(<span class="keyword">int</span> a, <span class="keyword">int</span> b))</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> sum = i + j;</span><br><span class="line">		callfuct(sum, j);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<p>在头文件 ** fileChange.h ** 中编写代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  fileChange.h</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> once</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> __declspec(dllexport) <span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j)</span></span>;</span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> __declspec(dllexport) <span class="function"><span class="keyword">int</span> <span class="title">addSync</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> j, <span class="keyword">void</span> (*callfuct)(<span class="keyword">int</span> a, <span class="keyword">int</span> b))</span></span>;</span><br></pre></td></tr></table></figure>
+<p>在这里必须使用，** extern “C” ** 让编译器使用C解析方法去导出DLL，不然node-ffi模块识别不了。</p>
+<h3 id="生成DLL"><a href="#生成DLL" class="headerlink" title="生成DLL"></a>生成DLL</h3><p>因为我的电脑环境是64位，node也是64位，所以我导出的dll也需要是64位，不然node-ffi也是调用不成功。</p>
+<p>** 导出方法： **</p>
+<img src="/posts/cf777cb3/node-dll-6.png" class="" title="导出方法">
+
+<p>导出的dll文件在在项目目录下的 \x64\Debug 中，即可找到 nodeFile.dll动态链接库文件。</p>
+<img src="/posts/cf777cb3/node-dll-7.png" class="" title="应用程序向导">
+
+<h3 id="node使用DLL"><a href="#node使用DLL" class="headerlink" title="node使用DLL"></a>node使用DLL</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//导入ffi模块</span></span><br><span class="line"><span class="keyword">var</span> ffi = <span class="built_in">require</span>(<span class="string">&#x27;ffi&#x27;</span>);</span><br><span class="line"><span class="comment">//使用ffi.Library加载dll, 第一个参赛是库文件路径，第二个参数是JSON格式，用于定义使用的dll方法。</span></span><br><span class="line"><span class="comment">//int 表示整形，pointer 表示 指针地址，也可以使用 int * 表示。</span></span><br><span class="line"><span class="keyword">var</span> libm = ffi.Library(<span class="string">&#x27;./../dll/nodeFlie&#x27;</span>, &#123;</span><br><span class="line">  <span class="string">&#x27;add&#x27;</span>: [ <span class="string">&#x27;int&#x27;</span>, [ <span class="string">&#x27;int&#x27;</span>,<span class="string">&#x27;int&#x27;</span> ] ],</span><br><span class="line">  <span class="string">&#x27;addSync&#x27;</span>: [<span class="string">&#x27;int&#x27;</span>, [<span class="string">&#x27;int&#x27;</span>,<span class="string">&#x27;int&#x27;</span>,<span class="string">&#x27;pointer&#x27;</span>]]</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//调用方法</span></span><br><span class="line"><span class="keyword">const</span> sum = libm.add(<span class="number">1</span>,<span class="number">5</span>);</span><br><span class="line"><span class="built_in">console</span>.log(sum);</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义 回调函数</span></span><br><span class="line"><span class="keyword">let</span> addCallback = ffi.Callback(<span class="string">&#x27;void&#x27;</span>, [<span class="string">&#x27;int&#x27;</span>, <span class="string">&#x27;int&#x27;</span>], <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(a,b);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//执行回调的 dll方法</span></span><br><span class="line">libm.addSync(<span class="number">2</span>,<span class="number">3</span>,addCallback);</span><br><span class="line"></span><br><span class="line">执行结果：</span><br><span class="line"></span><br><span class="line">PS E:\nodejsproject\node-fileChangeAttr\src&gt; node .\index.js</span><br><span class="line"><span class="number">6</span></span><br><span class="line"><span class="number">5</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/node/" rel="tag"># node</a>
+              <a href="/tags/dll/" rel="tag"># dll</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/9f19e967/" rel="prev" title="typeScript">
+                  <i class="fa fa-chevron-left"></i> typeScript
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/7f98c2be/" rel="next" title="webAssembly">
+                  webAssembly <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">修心</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
