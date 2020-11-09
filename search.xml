@@ -24,11 +24,11 @@
 </blockquote>
 <p>安装证书</p>
 <blockquote>
-<p>拷贝证书到【目录：/usr/local/share/ca-certificates/】<br>命令： sudo cp cer.crt /usr/local/share/ca-certificates/foo.crt<br>更新CA证书数据库存储：sudo update-ca-certificates</p>
+<p>拷贝证书到【目录：/usr/local/share/ca-certificates/】<br>命令： sudo cp cer.crt /usr/local/share/ca-certificates/foo.crt<br>更新 CA 证书数据库存储：sudo update-ca-certificates</p>
 </blockquote>
 <p>删除证书</p>
 <blockquote>
-<p>把证书从【目录：/usr/local/share/ca-certificates/】中删除<br>命令： sudo rm /usr/local/share/ca-certificates/cer.crt<br>更新CA证书数据库存储：sudo update-ca-certificates –fresh</p>
+<p>把证书从【目录：/usr/local/share/ca-certificates/】中删除<br>命令： sudo rm /usr/local/share/ca-certificates/cer.crt<br>更新 CA 证书数据库存储：sudo update-ca-certificates –fresh</p>
 </blockquote>
 <h4 id="linux-centos-6"><a href="#linux-centos-6" class="headerlink" title="linux (centos 6)"></a>linux (centos 6)</h4><p>列出证书</p>
 <blockquote>
@@ -36,11 +36,11 @@
 </blockquote>
 <p>安装证书</p>
 <blockquote>
-<p>安装ca-certificates包： yum install ca-certificates<br>启用动态CA配置功能： update-ca-trust force-enable<br>将其作为新文件添加到【目录：/etc/pki/ca-trust/source/anchors/】 中<br>命令：cp OK_Group_OA.crt /etc/pki/ca-trust/source/anchors/<br>更新证书存储：update-ca-trust extract</p>
+<p>安装 ca-certificates 包： yum install ca-certificates<br>启用动态 CA 配置功能： update-ca-trust force-enable<br>将其作为新文件添加到【目录：/etc/pki/ca-trust/source/anchors/】 中<br>命令：cp OK_Group_OA.crt /etc/pki/ca-trust/source/anchors/<br>更新证书存储：update-ca-trust extract</p>
 </blockquote>
 <p>删除证书</p>
 <blockquote>
-<p>把证书从【目录：/etc/pki/ca-trust/source/anchors/】中删除<br>命令： sudo rm /etc/pki/ca-trust/source/anchors/cer.crt<br>更新CA证书数据库存储：sudo update-ca-trust extract</p>
+<p>把证书从【目录：/etc/pki/ca-trust/source/anchors/】中删除<br>命令： sudo rm /etc/pki/ca-trust/source/anchors/cer.crt<br>更新 CA 证书数据库存储：sudo update-ca-trust extract</p>
 </blockquote>
 <h4 id="linux-centos-5"><a href="#linux-centos-5" class="headerlink" title="linux (centos 5)"></a>linux (centos 5)</h4><p>列出证书</p>
 <blockquote>
@@ -52,7 +52,7 @@
 </blockquote>
 <p>删除证书</p>
 <blockquote>
-<p>把 OK_Group_OA.crt 的内容删除掉，即可。<br>vim /etc/pki/tls/certs/ca-bundle.crt<br>删除完， :wq 保存 </p>
+<p>把 OK_Group_OA.crt 的内容删除掉，即可。<br>vim /etc/pki/tls/certs/ca-bundle.crt<br>删除完， :wq 保存</p>
 </blockquote>
 <h4 id="windows-10-windows-7"><a href="#windows-10-windows-7" class="headerlink" title="windows-10 || windows-7"></a>windows-10 || windows-7</h4><p>列出证书</p>
 <blockquote>
@@ -67,18 +67,18 @@
 <p>certutil -delstore “ROOT” serial-number-hex</p>
 </blockquote>
 <h3 id="安装证书核心代码"><a href="#安装证书核心代码" class="headerlink" title="安装证书核心代码"></a>安装证书核心代码</h3><p>证书类，提供了安装证书的功能，内部去判断所在的操作系统。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; app &#125; = <span class="built_in">require</span>(<span class="string">&#x27;electron&#x27;</span>);</span><br><span class="line"><span class="keyword">import</span> sudo <span class="keyword">from</span> <span class="string">&#x27;sudo-prompt&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; throwError &#125; <span class="keyword">from</span> <span class="string">&#x27;rxjs&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> os = <span class="built_in">require</span>(<span class="string">&#x27;os&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs-extra&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">InstallCer</span> </span>&#123;</span><br><span class="line">    platform = os.type().toLowerCase();</span><br><span class="line">    cerPath = path.resolve(__dirname, <span class="string">&#x27;../assets/cers&#x27;</span>, <span class="string">&#x27;cer.crt&#x27;</span>);</span><br><span class="line">    configDir = app.getPath(<span class="string">&#x27;userData&#x27;</span>);</span><br><span class="line">    assetsDir = path.resolve(<span class="built_in">this</span>.configDir, <span class="string">&#x27;assets/&#x27;</span>)</span><br><span class="line">    <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;证书路径：&#x27;</span>, <span class="built_in">this</span>.cerPath);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;实例化成功,当前系统：&#x27;</span>, <span class="built_in">this</span>.platform);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;用户目录：&#x27;</span>, <span class="built_in">this</span>.configDir);</span><br><span class="line">        <span class="built_in">this</span>.init();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">init</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        fs.ensureDirSync(<span class="built_in">this</span>.assetsDir);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            fs.copySync(<span class="built_in">this</span>.cerPath, <span class="string">`<span class="subst">$&#123;<span class="built_in">this</span>.assetsDir&#125;</span>/cer.crt`</span>);</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">&#x27;拷贝证书成功&#x27;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">           <span class="keyword">throw</span> err;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// mac 系统安装证书</span></span><br><span class="line">    <span class="function"><span class="title">darwin</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">`security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain &quot;<span class="subst">$&#123;<span class="built_in">this</span>.assetsDir&#125;</span>/cer.crt&quot;`</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// windows 系统安装证书</span></span><br><span class="line">    <span class="function"><span class="title">windows_nt</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">`certutil -addstore -f &quot;ROOT&quot; &quot;<span class="subst">$&#123;<span class="built_in">this</span>.assetsDir&#125;</span>/cer.crt&quot;`</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="title">runCer</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">const</span> command = <span class="built_in">this</span>[<span class="built_in">this</span>.platform]();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve,reject</span>)</span>&#123;</span><br><span class="line">            sudo.exec(</span><br><span class="line">                command,</span><br><span class="line">                &#123;</span><br><span class="line">                  name: <span class="string">&#x27;OK Network Assistant&#x27;</span>,</span><br><span class="line">                  icns: path.resolve(__dirname, <span class="string">&#x27;../assets/&#x27;</span>, <span class="string">&#x27;icon.icns&#x27;</span>)</span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="function"><span class="keyword">function</span>(<span class="params">error</span>) </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (error) &#123;</span><br><span class="line">                        reject(error)</span><br><span class="line">                    &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">                        resolve(<span class="literal">true</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            );</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; app &#125; = <span class="built_in">require</span>(<span class="string">&quot;electron&quot;</span>);</span><br><span class="line"><span class="keyword">import</span> sudo <span class="keyword">from</span> <span class="string">&quot;sudo-prompt&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; throwError &#125; <span class="keyword">from</span> <span class="string">&quot;rxjs&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> os = <span class="built_in">require</span>(<span class="string">&quot;os&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&quot;path&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&quot;fs-extra&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">InstallCer</span> </span>&#123;</span><br><span class="line">  platform = os.type().toLowerCase();</span><br><span class="line">  cerPath = path.resolve(__dirname, <span class="string">&quot;../assets/cers&quot;</span>, <span class="string">&quot;cer.crt&quot;</span>);</span><br><span class="line">  configDir = app.getPath(<span class="string">&quot;userData&quot;</span>);</span><br><span class="line">  assetsDir = path.resolve(<span class="built_in">this</span>.configDir, <span class="string">&quot;assets/&quot;</span>);</span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;证书路径：&quot;</span>, <span class="built_in">this</span>.cerPath);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;实例化成功,当前系统：&quot;</span>, <span class="built_in">this</span>.platform);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;用户目录：&quot;</span>, <span class="built_in">this</span>.configDir);</span><br><span class="line">    <span class="built_in">this</span>.init();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="title">init</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    fs.ensureDirSync(<span class="built_in">this</span>.assetsDir);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      fs.copySync(<span class="built_in">this</span>.cerPath, <span class="string">`<span class="subst">$&#123;<span class="built_in">this</span>.assetsDir&#125;</span>/cer.crt`</span>);</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">&quot;拷贝证书成功&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">      <span class="keyword">throw</span> err;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// mac 系统安装证书</span></span><br><span class="line">  <span class="function"><span class="title">darwin</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain &quot;<span class="subst">$&#123;<span class="built_in">this</span>.assetsDir&#125;</span>/cer.crt&quot;`</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// windows 系统安装证书</span></span><br><span class="line">  <span class="function"><span class="title">windows_nt</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`certutil -addstore -f &quot;ROOT&quot; &quot;<span class="subst">$&#123;<span class="built_in">this</span>.assetsDir&#125;</span>/cer.crt&quot;`</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="title">runCer</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> command = <span class="built_in">this</span>[<span class="built_in">this</span>.platform]();</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">      sudo.exec(</span><br><span class="line">        command,</span><br><span class="line">        &#123;</span><br><span class="line">          name: <span class="string">&quot;OK Network Assistant&quot;</span>,</span><br><span class="line">          icns: path.resolve(__dirname, <span class="string">&quot;../assets/&quot;</span>, <span class="string">&quot;icon.icns&quot;</span>),</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="function"><span class="keyword">function</span> (<span class="params">error</span>) </span>&#123;</span><br><span class="line">          <span class="keyword">if</span> (error) &#123;</span><br><span class="line">            reject(error);</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            resolve(<span class="literal">true</span>);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      );</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="坑无敌"><a href="#坑无敌" class="headerlink" title="坑无敌"></a>坑无敌</h3><h4 id="shell读取assar-资源"><a href="#shell读取assar-资源" class="headerlink" title="shell读取assar 资源"></a>shell读取assar 资源</h4><p>问题：</p>
-<p>在进行安装时，出现了读取资源失败的问题。通过查阅官方文案，发现时assar中的资源不支持通过<strong>shell管道</strong>的形式获取资源。</p>
+<h3 id="坑无敌"><a href="#坑无敌" class="headerlink" title="坑无敌"></a>坑无敌</h3><h4 id="shell-读取-assar-资源"><a href="#shell-读取-assar-资源" class="headerlink" title="shell 读取 assar 资源"></a>shell 读取 assar 资源</h4><p>问题：</p>
+<p>在进行安装时，出现了读取资源失败的问题。通过查阅官方文案，发现时 assar 中的资源不支持通过<strong>shell 管道</strong>的形式获取资源。</p>
 <p>解决：</p>
-<p>在进行安装时，先吧=把资源从<strong>assar</strong>中拷贝到assar外的目录下。这里我吧目录放在了用户目录下，通过 <strong>app.getPath(‘userData’)</strong> 该方法去获取每个操作系统的用户目录。</p>
+<p>在进行安装时，先吧=把资源从<strong>assar</strong>中拷贝到 assar 外的目录下。这里我吧目录放在了用户目录下，通过 <strong>app.getPath(‘userData’)</strong> 该方法去获取每个操作系统的用户目录。</p>
 <h4 id="开发与运行环境对文件的依赖"><a href="#开发与运行环境对文件的依赖" class="headerlink" title="开发与运行环境对文件的依赖"></a>开发与运行环境对文件的依赖</h4><p>问题：</p>
-<p>由于路径在开发与运行时都是相对的一个路径，所以在打包后，运行时无法找到icon\证书等文件。</p>
+<p>由于路径在开发与运行时都是相对的一个路径，所以在打包后，运行时无法找到 icon\证书等文件。</p>
 <p>解决：</p>
 <p>在开发时提供一份资源目录，生成环境打包的地方再次提供一份目录，目前虽然解决。但是还是需要升级下解决方案！</p>
 <h4 id="安装证书成功、失败、强制安装新证书"><a href="#安装证书成功、失败、强制安装新证书" class="headerlink" title="安装证书成功、失败、强制安装新证书"></a>安装证书成功、失败、强制安装新证书</h4><p>问题：<br>在安装了证书的用户电脑上，如果重新安装时，是无法进行安装的。</p>
-<p>解决：<br>使用<strong>electron-store</strong>数据配置模块，去记录该电脑的操作。如果用户安装了就保存value:1，失败为2。但是如果再次发布新的版本时，安装成功的value值就需要重新改变。该值计次叠加！</p>
+<p>解决：<br>使用<strong>electron-store</strong>数据配置模块，去记录该电脑的操作。如果用户安装了就保存 value:1，失败为 2。但是如果再次发布新的版本时，安装成功的 value 值就需要重新改变。该值计次叠加！</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">componentDidMount</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> ([<span class="literal">undefined</span>, <span class="number">2</span>, <span class="number">1</span>].includes(store.get(<span class="string">&#x27;isInstallCer&#x27;</span>))) &#123;</span><br><span class="line">      <span class="built_in">this</span>.time = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.handleSearch();</span><br><span class="line">        <span class="built_in">clearTimeout</span>(<span class="built_in">this</span>.time);</span><br><span class="line">      &#125;, <span class="number">1000</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">this</span>.props.history.push(routes.COUNTER)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
 <p>在这，我把每次安装成功使用过的值都放入**[undefined, 2, 1]**这里。使得每次发布的新版本。用户在使用时可以安装到心得证书！</p>
@@ -147,25 +147,26 @@
     <title>flutter</title>
     <url>/posts/2a2a7e8a/</url>
     <content><![CDATA[<h2 id="Flutter"><a href="#Flutter" class="headerlink" title="Flutter"></a>Flutter</h2><blockquote>
-<p><a href="https://flutter.io/">Flutter</a> 是谷歌的移动UI框架，可以快速在iOS和Android上构建高质量的原生用户界面。 Flutter可以与现有的代码一起工作。在全世界，Flutter正在被越来越多的开发者和组织使用，并且 <a href="https://flutter.io/">Flutter</a> 是完全免费、开源的。</p>
+<p><a href="https://flutter.io/">Flutter</a> 是谷歌的移动 UI 框架，可以快速在 iOS 和 Android 上构建高质量的原生用户界面。 Flutter 可以与现有的代码一起工作。在全世界，Flutter 正在被越来越多的开发者和组织使用，并且 <a href="https://flutter.io/">Flutter</a> 是完全免费、开源的。</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">中文官网:</span><br><span class="line">https:&#x2F;&#x2F;flutterchina.club&#x2F;setup-macos&#x2F;</span><br><span class="line">https:&#x2F;&#x2F;flutter-io.cn&#x2F;</span><br><span class="line"></span><br><span class="line">第三方库   可以理解为npm</span><br><span class="line">https:&#x2F;&#x2F;pub.dartlang.org&#x2F;flutter</span><br><span class="line"></span><br><span class="line">环境搭建\入门\填坑指南</span><br><span class="line">https:&#x2F;&#x2F;blog.csdn.net&#x2F;hekaiyou&#x2F;article&#x2F;details&#x2F;52874796</span><br><span class="line">https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;399c01657920</span><br><span class="line">       </span><br><span class="line">国内Flutter论坛</span><br><span class="line">http:&#x2F;&#x2F;flutter-dev.cn&#x2F;</span><br><span class="line"></span><br><span class="line">Dart\Flutter 扩展插件</span><br><span class="line">https:&#x2F;&#x2F;dartcode.org&#x2F;releases&#x2F;v2-19&#x2F;</span><br><span class="line"></span><br><span class="line">Flutter入门实例</span><br><span class="line">https:&#x2F;&#x2F;juejin.im&#x2F;post&#x2F;5b31d776e51d455e2b5ab253</span><br><span class="line"></span><br><span class="line">Widget组件介绍</span><br><span class="line">https:&#x2F;&#x2F;juejin.im&#x2F;post&#x2F;5bab35ff5188255c3272c228</span><br><span class="line"></span><br><span class="line">GitHub-Flutter聚集地</span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;xitu&#x2F;awesome-flutter</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">中文官网:</span><br><span class="line">https:&#x2F;&#x2F;flutterchina.club&#x2F;setup-macos&#x2F;</span><br><span class="line">https:&#x2F;&#x2F;flutter-io.cn&#x2F;</span><br><span class="line"></span><br><span class="line">第三方库   可以理解为npm</span><br><span class="line">https:&#x2F;&#x2F;pub.dartlang.org&#x2F;flutter</span><br><span class="line"></span><br><span class="line">环境搭建\入门\填坑指南</span><br><span class="line">https:&#x2F;&#x2F;blog.csdn.net&#x2F;hekaiyou&#x2F;article&#x2F;details&#x2F;52874796</span><br><span class="line">https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;399c01657920</span><br><span class="line"></span><br><span class="line">国内Flutter论坛</span><br><span class="line">http:&#x2F;&#x2F;flutter-dev.cn&#x2F;</span><br><span class="line"></span><br><span class="line">Dart\Flutter 扩展插件</span><br><span class="line">https:&#x2F;&#x2F;dartcode.org&#x2F;releases&#x2F;v2-19&#x2F;</span><br><span class="line"></span><br><span class="line">Flutter入门实例</span><br><span class="line">https:&#x2F;&#x2F;juejin.im&#x2F;post&#x2F;5b31d776e51d455e2b5ab253</span><br><span class="line"></span><br><span class="line">Widget组件介绍</span><br><span class="line">https:&#x2F;&#x2F;juejin.im&#x2F;post&#x2F;5bab35ff5188255c3272c228</span><br><span class="line"></span><br><span class="line">GitHub-Flutter聚集地</span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;xitu&#x2F;awesome-flutter</span><br></pre></td></tr></table></figure>
+
 <a id="more"></a>
 
 <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>** 概念 **</p>
 <ol>
-<li><p>Flutter是一个移动应用程序的软件开发工具包（SDK），具有以下特征：</p>
+<li><p>Flutter 是一个移动应用程序的软件开发工具包（SDK），具有以下特征：</p>
 <blockquote>
-<p>跨平台应用的框架，没有使用WebView或者系统平台自带的控件，使用自身的高性能渲染引擎自绘<br>简化版的浏览器，最大限度在android和ios上统一UI，包括业务逻辑和用户体验<br>开发语言使用dart，结合C, C++, 和Skia（2D渲染引擎）构建<br>支持hot reload，包含着完整的控件和工具链</p>
+<p>跨平台应用的框架，没有使用 WebView 或者系统平台自带的控件，使用自身的高性能渲染引擎自绘<br>简化版的浏览器，最大限度在 android 和 ios 上统一 UI，包括业务逻辑和用户体验<br>开发语言使用 dart，结合 C, C++, 和 Skia（2D 渲染引擎）构建<br>支持 hot reload，包含着完整的控件和工具链</p>
 </blockquote>
 <blockquote>
-<p>一切皆控件，控件是每个Flutter应用程序的基本构建块，与分离视图、控制器、布局和其他属性的框架不同，Flutter具有一致的统一对象模型：控件。一个控件可以定义：结构元素（比如按钮或菜单）、风格元素（比如字体或颜色方案）、布局的方面（比如填充）、一些业务逻辑等</p>
+<p>一切皆控件，控件是每个 Flutter 应用程序的基本构建块，与分离视图、控制器、布局和其他属性的框架不同，Flutter 具有一致的统一对象模型：控件。一个控件可以定义：结构元素（比如按钮或菜单）、风格元素（比如字体或颜色方案）、布局的方面（比如填充）、一些业务逻辑等</p>
 </blockquote>
 <blockquote>
-<p>与React理念相同，都是组合大于继承，控件本身通常由许多小型、单用途的控件组成，结合起来产生强大的效果，类的层次结构是扁平的，以最大化可能的组合数量</p>
+<p>与 React 理念相同，都是组合大于继承，控件本身通常由许多小型、单用途的控件组成，结合起来产生强大的效果，类的层次结构是扁平的，以最大化可能的组合数量</p>
 </blockquote>
 <blockquote>
-<p>强化版的WebView，框架仅提供一个View层，大部分功能要依赖原生<br>目前只能够运行大部分Dart代码（不能引入dart:mirrors或dart:html库）</p>
+<p>强化版的 WebView，框架仅提供一个 View 层，大部分功能要依赖原生<br>目前只能够运行大部分 Dart 代码（不能引入 dart:mirrors 或 dart:html 库）</p>
 </blockquote>
 </li>
 </ol>
@@ -173,38 +174,38 @@
 <ol>
 <li><p>宏观上：</p>
 <blockquote>
-<p>Flutter能够提供优美的UI和流畅的使用体验<br>Flutter降低了开发App的门槛，加速移动应用的开发速度，并且能够降低同时开发Android和iOS应用的成本和复杂度<br>Flutter能够轻松做出原型并且能够保持相当高还原度</p>
+<p>Flutter 能够提供优美的 UI 和流畅的使用体验<br>Flutter 降低了开发 App 的门槛，加速移动应用的开发速度，并且能够降低同时开发 Android 和 iOS 应用的成本和复杂度<br>Flutter 能够轻松做出原型并且能够保持相当高还原度</p>
 </blockquote>
 </li>
 <li><p>微观上：</p>
 <blockquote>
-<p>高效率，用一套代码库就能开发iOS和Android应用<br>使用新型的、表现力强的语言和声明式的方法，用更少的代码来做更多的事情<br>可以在应用程序运行时更改代码并重新加载查看效果，也就是热重新加载<br>修复崩溃时可以从应用程序停止的位置继续调试<br>创建美观、高度定制的用户体验<br>Flutter框架内置了一组丰富的质感设计控件<br>实现定制、美观、品牌驱动的设计，而不受OEM控件集的限制<br>深度优化，移动优先的2D渲染引擎而且对文本支持非常出色<br>react风格的框架<br>支持单元和集成测试的API<br>支持与系统平台和第三方SDK交互的插件API<br>支持Windows，Mac和Linux的Headless test runner</p>
+<p>高效率，用一套代码库就能开发 iOS 和 Android 应用<br>使用新型的、表现力强的语言和声明式的方法，用更少的代码来做更多的事情<br>可以在应用程序运行时更改代码并重新加载查看效果，也就是热重新加载<br>修复崩溃时可以从应用程序停止的位置继续调试<br>创建美观、高度定制的用户体验<br>Flutter 框架内置了一组丰富的质感设计控件<br>实现定制、美观、品牌驱动的设计，而不受 OEM 控件集的限制<br>深度优化，移动优先的 2D 渲染引擎而且对文本支持非常出色<br>react 风格的框架<br>支持单元和集成测试的 API<br>支持与系统平台和第三方 SDK 交互的插件 API<br>支持 Windows，Mac 和 Linux 的 Headless test runner</p>
 </blockquote>
 </li>
 </ol>
 <h3 id="运行机制"><a href="#运行机制" class="headerlink" title="运行机制"></a>运行机制</h3><p>Flutter 应用运行在一个用 C++ 写的引擎中，Flutter 应用可以看做是一个游戏 App，代码都是在引擎中运行。</p>
 <p>** Android **</p>
-<p>引擎的C或C++代码是由Android NDK编译的，而框架的主要代码和应用的代码由Dart compiler编译成native code执行的。</p>
-<p>对于Android应用来说，Flutter框架在引擎中实现了一个继承于SurfaceView的 FlutterView。用户所看到的UI都是在这个SurfaceView中显示。如果要和原生平台功能交互，则可以在Activity中使用FlutterView，并通过Flutter提供的消息API和原生平台收发消息。</p>
+<p>引擎的 C 或 C++代码是由 Android NDK 编译的，而框架的主要代码和应用的代码由 Dart compiler 编译成 native code 执行的。</p>
+<p>对于 Android 应用来说，Flutter 框架在引擎中实现了一个继承于 SurfaceView 的 FlutterView。用户所看到的 UI 都是在这个 SurfaceView 中显示。如果要和原生平台功能交互，则可以在 Activity 中使用 FlutterView，并通过 Flutter 提供的消息 API 和原生平台收发消息。</p>
 <p>** ios **</p>
-<p>引擎的C或C++代码是由LLVM编译的，而所有Dart的代码会被AOT编译成native code，整个APP运行时使用的是机器指令（并不是拦截器）。</p>
+<p>引擎的 C 或 C++代码是由 LLVM 编译的，而所有 Dart 的代码会被 AOT 编译成 native code，整个 APP 运行时使用的是机器指令（并不是拦截器）。</p>
 <h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p>** 层次描述 **</p>
 <img src="/posts/2a2a7e8a/FlutterFramework.png" class="" title="Flutter架构">
 
-<p>Flutter的框架分为Framework和Engine两层，应用是基于Framework层开发的，Framework负责渲染中的Build，Layout，Paint，生成Layer等环节。Engine层是C++实现的渲染引擎，负责把Framework生成的Layer组合，生成纹理，然后通过Open GL接口向GPU提交渲染数据。</p>
+<p>Flutter 的框架分为 Framework 和 Engine 两层，应用是基于 Framework 层开发的，Framework 负责渲染中的 Build，Layout，Paint，生成 Layer 等环节。Engine 层是 C++实现的渲染引擎，负责把 Framework 生成的 Layer 组合，生成纹理，然后通过 Open GL 接口向 GPU 提交渲染数据。</p>
 <p>** 图形管道 **</p>
 <img src="/posts/2a2a7e8a/FlutterFramework1.png" class="" title="Flutter运行">
 
 <p>** 渲染管道 **</p>
 <img src="/posts/2a2a7e8a/flutterRun.png" class="" title="Flutter运行">
 
-<p>当需要更新UI的时候，Framework通知Engine，Engine会等到下个Vsync信号到达的时候，会通知Framework，然后Framework会进行animations, build，layout，compositing，paint，最后生成layer提交给Engine。Engine会把layer进行组合，生成纹理，最后通过Open Gl接口提交数据给GPU， GPU经过处理后在显示器上面显示。</p>
-<p>当应用调用setState后，经过Framework一连串的调用后，最终调用scheduleFrame来通知Engine需要更新UI，Engine就会在下个vSync到达的时候通过调用_drawFrame来通知Framework，然后Framework就会通过BuildOwner进行Build和PipelineOwner进行Layout，Paint，最后把生成Layer，组合成Scene提交给Engine。接下来我们从代码中分析一下，这些环节具体是怎么样实现的。首先从Engine回调Framework的入口开始。</p>
-<p>在Flutter应用开发中,无状态的widget是通过StatelessWidget的build方法构建UI，有状态的widget是通过State的build方法构建UI。现在具体分析一下从setState调用后到调用自定义State的build的流程是怎样的（现在只分析有状态的widget渲染过程）。</p>
-<p>在Flutter中应用中，是使用支持layout的widget来实现布局的，支持layout的wiget有Container，Padding，Align等等，强大又简易。在渲染流程中，在widget build后会进入layout环节，下面具体分析一下layout的实现，layout入口是flushLayout。</p>
-<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>Flutter 支持ios android Tv 嵌入式系列开发</p>
-<h3 id="了解-Widget-组件"><a href="#了解-Widget-组件" class="headerlink" title="了解** Widget **组件"></a>了解** Widget **组件</h3><p>在Flutter中，我们平时自定义的widget，一般都是继承自StatefulWidget或StatelessWidget（并不是只有这两种），这两种widget也是目前最常用的两种。如果一个控件自身状态不会去改变，创建了就直接显示，不会有色值、大小或者其他属性的变化，这种widget一般都是继承自StatelessWidget，常见的有Container、ScrollView等。如果一个控件需要动态的去改变或者相应一些状态，例如点击态、色值、内容区域等，那么一般都是继承自StatefulWidget，常见的有CheckBox、AppBar、TabBar等。其实单纯的从名字也可以看出这两种widget的区别，这两种widget都是继承自Widget类。</p>
-<p>Widget类在Flutter中是非常重要的，继承自Widget类的有PreferredSizeWidget、ProxyWidget、RenderObjectWidget、StatefulWidget、StatelessWidget。我们日常使用的绝大部分widget都是继承自Widget类，</p>
+<p>当需要更新 UI 的时候，Framework 通知 Engine，Engine 会等到下个 Vsync 信号到达的时候，会通知 Framework，然后 Framework 会进行 animations, build，layout，compositing，paint，最后生成 layer 提交给 Engine。Engine 会把 layer 进行组合，生成纹理，最后通过 Open Gl 接口提交数据给 GPU， GPU 经过处理后在显示器上面显示。</p>
+<p>当应用调用 setState 后，经过 Framework 一连串的调用后，最终调用 scheduleFrame 来通知 Engine 需要更新 UI，Engine 就会在下个 vSync 到达的时候通过调用_drawFrame 来通知 Framework，然后 Framework 就会通过 BuildOwner 进行 Build 和 PipelineOwner 进行 Layout，Paint，最后把生成 Layer，组合成 Scene 提交给 Engine。接下来我们从代码中分析一下，这些环节具体是怎么样实现的。首先从 Engine 回调 Framework 的入口开始。</p>
+<p>在 Flutter 应用开发中,无状态的 widget 是通过 StatelessWidget 的 build 方法构建 UI，有状态的 widget 是通过 State 的 build 方法构建 UI。现在具体分析一下从 setState 调用后到调用自定义 State 的 build 的流程是怎样的（现在只分析有状态的 widget 渲染过程）。</p>
+<p>在 Flutter 中应用中，是使用支持 layout 的 widget 来实现布局的，支持 layout 的 wiget 有 Container，Padding，Align 等等，强大又简易。在渲染流程中，在 widget build 后会进入 layout 环节，下面具体分析一下 layout 的实现，layout 入口是 flushLayout。</p>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>Flutter 支持 ios android Tv 嵌入式系列开发</p>
+<h3 id="了解-Widget-组件"><a href="#了解-Widget-组件" class="headerlink" title="了解** Widget **组件"></a>了解** Widget **组件</h3><p>在 Flutter 中，我们平时自定义的 widget，一般都是继承自 StatefulWidget 或 StatelessWidget（并不是只有这两种），这两种 widget 也是目前最常用的两种。如果一个控件自身状态不会去改变，创建了就直接显示，不会有色值、大小或者其他属性的变化，这种 widget 一般都是继承自 StatelessWidget，常见的有 Container、ScrollView 等。如果一个控件需要动态的去改变或者相应一些状态，例如点击态、色值、内容区域等，那么一般都是继承自 StatefulWidget，常见的有 CheckBox、AppBar、TabBar 等。其实单纯的从名字也可以看出这两种 widget 的区别，这两种 widget 都是继承自 Widget 类。</p>
+<p>Widget 类在 Flutter 中是非常重要的，继承自 Widget 类的有 PreferredSizeWidget、ProxyWidget、RenderObjectWidget、StatefulWidget、StatelessWidget。我们日常使用的绝大部分 widget 都是继承自 Widget 类，</p>
 <h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><p>** 控件生命周期 **</p>
 <img src="/posts/2a2a7e8a/flutterWidgetBuild.png" class="" title="Flutter运行">
 
@@ -212,35 +213,35 @@
 <img src="/posts/2a2a7e8a/FlutterState.png" class="" title="Flutter运行">
 
 <p>** 生命周期有四种状态： **</p>
-<p>created：当State对象被创建时候，State.initState方法会被调用；</p>
-<p>initialized：当State对象被创建，但还没有准备构建时，State.didChangeDependencies在这个时候会被调用；</p>
-<p>ready：State对象已经准备好了构建，State.dispose没有被调用的时候；</p>
-<p>defunct：State.dispose被调用后，State对象不能够被构建。</p>
+<p>created：当 State 对象被创建时候，State.initState 方法会被调用；</p>
+<p>initialized：当 State 对象被创建，但还没有准备构建时，State.didChangeDependencies 在这个时候会被调用；</p>
+<p>ready：State 对象已经准备好了构建，State.dispose 没有被调用的时候；</p>
+<p>defunct：State.dispose 被调用后，State 对象不能够被构建。</p>
 <p>** 完整生命周期如下： **</p>
 <ol>
-<li><p>创建一个State对象时，会调用StatefulWidget.createState；</p>
+<li><p>创建一个 State 对象时，会调用 StatefulWidget.createState；</p>
 </li>
-<li><p>和一个BuildContext相关联，可以认为被加载了（mounted）；</p>
+<li><p>和一个 BuildContext 相关联，可以认为被加载了（mounted）；</p>
 </li>
-<li><p>调用initState；</p>
+<li><p>调用 initState；</p>
 </li>
-<li><p>调用didChangeDependencies；</p>
+<li><p>调用 didChangeDependencies；</p>
 </li>
-<li><p>经过上述步骤，State对象被完全的初始化了，调用build；</p>
+<li><p>经过上述步骤，State 对象被完全的初始化了，调用 build；</p>
 </li>
-<li><p>如果有需要，会调用didUpdateWidget；</p>
+<li><p>如果有需要，会调用 didUpdateWidget；</p>
 </li>
-<li><p>如果处在开发模式，热加载会调用reassemble；</p>
+<li><p>如果处在开发模式，热加载会调用 reassemble；</p>
 </li>
-<li><p>如果它的子树（subtree）包含需要被移除的State对象，会调用deactivate；</p>
+<li><p>如果它的子树（subtree）包含需要被移除的 State 对象，会调用 deactivate；</p>
 </li>
-<li><p>调用dispose,State对象以后都不会被构建；</p>
+<li><p>调用 dispose,State 对象以后都不会被构建；</p>
 </li>
-<li><p>当调用了dispose,State对象处于未加载（unmounted），已经被dispose的State对象没有办法被重新加载（remount）。</p>
+<li><p>当调用了 dispose,State 对象处于未加载（unmounted），已经被 dispose 的 State 对象没有办法被重新加载（remount）。</p>
 </li>
 </ol>
 <h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><ol>
-<li>克隆Flutter 仓库到本地</li>
+<li>克隆 Flutter 仓库到本地</li>
 </ol>
 <blockquote>
 <p>git clone -b master <a href="https://github.com/flutter/flutter.git">https://github.com/flutter/flutter.git</a></p>
@@ -249,8 +250,9 @@
 <li>配置环境变量</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> PUB_HOSTED_URL=https://pub.flutter-io.cn //国内用户需要设置</span><br><span class="line"><span class="built_in">export</span> FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn //国内用户需要设置</span><br><span class="line"><span class="built_in">export</span> FLUTTER_HOME= // 设置Flutter SDK 目录</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$FLUTTER_HOM</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+
 <ol start="3">
-<li>执行命令检测Flutter依赖， 需要科学上网（这样会自动下载）</li>
+<li>执行命令检测 Flutter 依赖， 需要科学上网（这样会自动下载）</li>
 </ol>
 <blockquote>
 <p>flutter doctor</p>
@@ -266,7 +268,7 @@
   <entry>
     <title>javascript新语法</title>
     <url>/posts/ccdacdfe/</url>
-    <content><![CDATA[<h2 id="Js-第三阶段的新语法"><a href="#Js-第三阶段的新语法" class="headerlink" title="Js 第三阶段的新语法"></a>Js 第三阶段的新语法</h2><p>主要介绍2个处于Statge 3 的新语法，目前该语法可以使用babel插件进行使用。这两个新语法分别是：</p>
+    <content><![CDATA[<h2 id="Js-第三阶段的新语法"><a href="#Js-第三阶段的新语法" class="headerlink" title="Js 第三阶段的新语法"></a>Js 第三阶段的新语法</h2><p>主要介绍 2 个处于 Statge 3 的新语法，目前该语法可以使用 babel 插件进行使用。这两个新语法分别是：</p>
 <ul>
 <li>proposal-optional-chaining</li>
 <li>proposal-nullish-coalescing</li>
@@ -274,26 +276,26 @@
 <a id="more"></a>
 
 <h2 id="proposal-optional-chaining"><a href="#proposal-optional-chaining" class="headerlink" title="proposal-optional-chaining"></a>proposal-optional-chaining</h2><p>TC39 - 提案 地址： <a href="https://github.com/tc39/proposal-optional-chaining">https://github.com/tc39/proposal-optional-chaining</a></p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> a = &#123;</span><br><span class="line">  b: &#123;</span><br><span class="line">    c: &#123;</span><br><span class="line">      d: &#123;</span><br><span class="line">        e: <span class="number">0</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> a = &#123;</span><br><span class="line">  b: &#123;</span><br><span class="line">    c: &#123;</span><br><span class="line">      d: &#123;</span><br><span class="line">        e: <span class="number">0</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-<h3 id="旧语法-取值"><a href="#旧语法-取值" class="headerlink" title="旧语法 取值"></a>旧语法 取值</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> eValue = a &amp;&amp; a.b &amp;&amp; a.b.c &amp;&amp; a.b.c.d &amp;&amp; a.b.c.d.e ? a.b.c.d.e : <span class="string">&#x27;--&#x27;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(eValue) <span class="comment">// 输出 --</span></span><br></pre></td></tr></table></figure>
+<h3 id="旧语法-取值"><a href="#旧语法-取值" class="headerlink" title="旧语法 取值"></a>旧语法 取值</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> eValue = a &amp;&amp; a.b &amp;&amp; a.b.c &amp;&amp; a.b.c.d &amp;&amp; a.b.c.d.e ? a.b.c.d.e : <span class="string">&quot;--&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(eValue); <span class="comment">// 输出 --</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="新语法-取值"><a href="#新语法-取值" class="headerlink" title="新语法 取值"></a>新语法 取值</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> eValue = a.b?.c?.e || <span class="string">&#x27;--&#x27;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(eValue) <span class="comment">// 输出 --</span></span><br></pre></td></tr></table></figure>
+<h3 id="新语法-取值"><a href="#新语法-取值" class="headerlink" title="新语法 取值"></a>新语法 取值</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> eValue = a.b?.c?.e || <span class="string">&quot;--&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(eValue); <span class="comment">// 输出 --</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>以 <strong>“极少、完美、可阅读”</strong> 的代码量，实现了最完美的深度取值的问题。可是观察上面的代码方案时，还是不够完美。如果某个用户的余额就是0的化，那么岂不是界面上展示的是 <strong>“–”</strong>。不科学、不科学，继续阅读，揭开疑惑！</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>以 <strong>“极少、完美、可阅读”</strong> 的代码量，实现了最完美的深度取值的问题。可是观察上面的代码方案时，还是不够完美。如果某个用户的余额就是 0 的化，那么岂不是界面上展示的是 <strong>“–”</strong>。不科学、不科学，继续阅读，揭开疑惑！</p>
 <h2 id="proposal-nullish-coalescing"><a href="#proposal-nullish-coalescing" class="headerlink" title="proposal-nullish-coalescing"></a>proposal-nullish-coalescing</h2><p>TC39 - 提案 地址： <a href="https://github.com/tc39/proposal-nullish-coalescing">https://github.com/tc39/proposal-nullish-coalescing</a></p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> a = &#123;</span><br><span class="line">  b: &#123;</span><br><span class="line">    c: &#123;</span><br><span class="line">      d: &#123;</span><br><span class="line">        e: <span class="number">0</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> a = &#123;</span><br><span class="line">  b: &#123;</span><br><span class="line">    c: &#123;</span><br><span class="line">      d: &#123;</span><br><span class="line">        e: <span class="number">0</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-<h3 id="旧语法-显示余额为-0"><a href="#旧语法-显示余额为-0" class="headerlink" title="旧语法 显示余额为 0"></a>旧语法 显示余额为 0</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> eValue = a.b?.c?.d?.e === <span class="number">0</span> ? <span class="number">0</span> : a.b?.c?.d?.e;</span><br><span class="line"><span class="built_in">console</span>.log(eValue) <span class="comment">// 输出 0</span></span><br></pre></td></tr></table></figure>
+<h3 id="旧语法-显示余额为-0"><a href="#旧语法-显示余额为-0" class="headerlink" title="旧语法 显示余额为 0"></a>旧语法 显示余额为 0</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> eValue = a.b?.c?.d?.e === <span class="number">0</span> ? <span class="number">0</span> : a.b?.c?.d?.e;</span><br><span class="line"><span class="built_in">console</span>.log(eValue); <span class="comment">// 输出 0</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="新语法-显示余额为-0"><a href="#新语法-显示余额为-0" class="headerlink" title="新语法 显示余额为 0"></a>新语法 显示余额为 0</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> eValue = a.b?.c?.d?.e ?? <span class="number">0</span>;</span><br><span class="line"><span class="built_in">console</span>.log(eValue) <span class="comment">// 输出 0</span></span><br></pre></td></tr></table></figure>
+<h3 id="新语法-显示余额为-0"><a href="#新语法-显示余额为-0" class="headerlink" title="新语法 显示余额为 0"></a>新语法 显示余额为 0</h3><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> eValue = a.b?.c?.d?.e ?? <span class="number">0</span>;</span><br><span class="line"><span class="built_in">console</span>.log(eValue); <span class="comment">// 输出 0</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="如何接到已有的项目中"><a href="#如何接到已有的项目中" class="headerlink" title="如何接到已有的项目中"></a>如何接到已有的项目中</h2><ul>
-<li>升级eslint-loader 因为低版本的不支持新语法检查</li>
-<li>升级为babel7</li>
-<li>安装babel</li>
+<li>升级 eslint-loader 因为低版本的不支持新语法检查</li>
+<li>升级为 babel7</li>
+<li>安装 babel</li>
 </ul>
-<h2 id="安装Babel插件"><a href="#安装Babel插件" class="headerlink" title="安装Babel插件"></a>安装Babel插件</h2><blockquote>
+<h2 id="安装-Babel-插件"><a href="#安装-Babel-插件" class="headerlink" title="安装 Babel 插件"></a>安装 Babel 插件</h2><blockquote>
 <p>@babel/plugin-proposal-optional-chaining</p>
 </blockquote>
 <blockquote>
@@ -309,17 +311,18 @@
       </tags>
   </entry>
   <entry>
-    <title>基于mobx的表单验证(mobx-react-form)</title>
-    <url>/posts/f8f5c654/</url>
-    <content><![CDATA[<h1 id="下载地址"><a href="#下载地址" class="headerlink" title="下载地址"></a>下载地址</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sssssss</span><br></pre></td></tr></table></figure>]]></content>
-      <tags>
-        <tag>mobx</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>muniz-cli-1</title>
+    <title>Muniz CLI ( 一 )</title>
     <url>/posts/undefined/</url>
-    <content><![CDATA[<h1 id="muniz-脚手架"><a href="#muniz-脚手架" class="headerlink" title="muniz 脚手架"></a>muniz 脚手架</h1>]]></content>
+    <content><![CDATA[<h1 id="muniz-脚手架"><a href="#muniz-脚手架" class="headerlink" title="muniz 脚手架"></a>muniz 脚手架</h1><a id="more"></a>
+]]></content>
+      <categories>
+        <category>js</category>
+        <category>node</category>
+        <category>cli</category>
+      </categories>
+      <tags>
+        <tag>js</tag>
+      </tags>
   </entry>
   <entry>
     <title>node-dll 调用</title>
@@ -905,9 +908,10 @@
 <p>撒尿和泥，还玩的不亦乐乎</p>
 <p>纠结自己要上清华还是北大，长大后发现想多了</p>
 <a id="more"></a>
+
 <p>用笔在自己胳膊上画手表，还舍不得洗掉</p>
 <p>用放大镜烤蚂蚁（小时候居然那么残忍……）</p>
-<p>老爸骑28自行车带我上街，忘了我已经先坐在后座上，偏腿上车，我就飞了出去…</p>
+<p>老爸骑 28 自行车带我上街，忘了我已经先坐在后座上，偏腿上车，我就飞了出去…</p>
 <p>听着这么一段小故事，或许都发现了这些虎事很有趣。</p>
 <h3 id="功能展示"><a href="#功能展示" class="headerlink" title="功能展示"></a>功能展示</h3><ol>
 <li>首页-视频播放 （同时只能播放一个视频特性）</li>
@@ -917,40 +921,45 @@
 </ol>
 <h3 id="知识总结"><a href="#知识总结" class="headerlink" title="知识总结"></a>知识总结</h3><h5 id="1-首页-视频播放-（实现统一时刻只能播放一个视频）"><a href="#1-首页-视频播放-（实现统一时刻只能播放一个视频）" class="headerlink" title="1. 首页-视频播放 （实现统一时刻只能播放一个视频）"></a>1. 首页-视频播放 （实现统一时刻只能播放一个视频）</h5><p>解决思路：无非就是找一个标识，作为全局变量去记录上次播放的视频。也可以使用循环的方式去实现，不过循环的方式非常的不友好，随着分页数据的加载回导致程序越来越慢！</p>
 <p>方案实时：我使用的是** vuex **,不过也可以采取 ** Storage ** 本地存储的方式。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">handleVideoPlay</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">this</span>.playFlag) &#123;</span><br><span class="line">          <span class="built_in">this</span>.ajaxVideoClick()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.playFlag = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">const</span> videoCtx = wx.createVideoContext(<span class="string">&#x27;video-&#x27;</span>+<span class="built_in">this</span>.video.id)</span><br><span class="line">        videoCtx.play()</span><br><span class="line">        <span class="comment">//用store定义的变量去判断 </span></span><br><span class="line">        <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">this</span>.videoPlayId === -<span class="number">1</span></span>)</span>&#123;</span><br><span class="line">          <span class="comment">// 调用，修改 store中的 videoPlayId 值</span></span><br><span class="line">          <span class="built_in">this</span>[VideoPlayId](<span class="built_in">this</span>.video.id)</span><br><span class="line">          <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">const</span> videoCtx1 = wx.createVideoContext(<span class="string">&#x27;video-&#x27;</span>+<span class="built_in">this</span>.videoPlayId)</span><br><span class="line">        videoCtx1.pause()</span><br><span class="line">        <span class="built_in">this</span>[VideoPlayId](<span class="built_in">this</span>.video.id)</span><br><span class="line">        <span class="comment">// videoCtx.requestFullScreen()</span></span><br><span class="line">      &#125;,</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">handleVideoPlay</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">this</span>.playFlag) &#123;</span><br><span class="line">          <span class="built_in">this</span>.ajaxVideoClick()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.playFlag = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">const</span> videoCtx = wx.createVideoContext(<span class="string">&#x27;video-&#x27;</span>+<span class="built_in">this</span>.video.id)</span><br><span class="line">        videoCtx.play()</span><br><span class="line">        <span class="comment">//用store定义的变量去判断</span></span><br><span class="line">        <span class="function"><span class="title">if</span>(<span class="params"><span class="built_in">this</span>.videoPlayId === -<span class="number">1</span></span>)</span>&#123;</span><br><span class="line">          <span class="comment">// 调用，修改 store中的 videoPlayId 值</span></span><br><span class="line">          <span class="built_in">this</span>[VideoPlayId](<span class="built_in">this</span>.video.id)</span><br><span class="line">          <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">const</span> videoCtx1 = wx.createVideoContext(<span class="string">&#x27;video-&#x27;</span>+<span class="built_in">this</span>.videoPlayId)</span><br><span class="line">        videoCtx1.pause()</span><br><span class="line">        <span class="built_in">this</span>[VideoPlayId](<span class="built_in">this</span>.video.id)</span><br><span class="line">        <span class="comment">// videoCtx.requestFullScreen()</span></span><br><span class="line">      &#125;,</span><br></pre></td></tr></table></figure>
 
 <h5 id="2-分享功能"><a href="#2-分享功能" class="headerlink" title="2. 分享功能"></a>2. 分享功能</h5><p>小程序如果想对外分享，必须在 page 里面定义 onShareAppMessage 函数，来配置页面分享转发相关的信息。</p>
 <ul>
-<li>  只有定义了此事件处理函数，右上角菜单才会显示 “转发” 按钮</li>
-<li>  用户点击转发按钮的时候会调用</li>
-<li>  此事件需要 return 一个 Object，用于自定义转发内容</li>
+<li>只有定义了此事件处理函数，右上角菜单才会显示 “转发” 按钮</li>
+<li>用户点击转发按钮的时候会调用</li>
+<li>此事件需要 return 一个 Object，用于自定义转发内容</li>
 </ul>
-<p>一个页面可能会有多个分享，可以由插入的参数options来判断具体是由哪个位置进行分享，从而做不同的逻辑判断。</p>
-<p>不过在mpvue中，需要把 onShareAppMessage  函数写在 export  default { } 根节点中，与 methods方法通级。</p>
+<p>一个页面可能会有多个分享，可以由插入的参数 options 来判断具体是由哪个位置进行分享，从而做不同的逻辑判断。</p>
+<p>不过在 mpvue 中，需要把 onShareAppMessage 函数写在 export default { } 根节点中，与 methods 方法通级。</p>
 <figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="title">onShareAppMessage</span>(<span class="params">res</span>)</span> &#123;</span><br><span class="line">       <span class="keyword">return</span> &#123;</span><br><span class="line">         title: <span class="string">&#x27;虎事小程序-&#x27;</span> + <span class="built_in">this</span>.video.auther,</span><br><span class="line">         path: <span class="built_in">this</span>.detaiUrl,</span><br><span class="line">         imageUrl: <span class="built_in">this</span>.video.img,</span><br><span class="line">         success: <span class="function"><span class="keyword">function</span> (<span class="params">shareTickets</span>) </span>&#123;</span><br><span class="line">           <span class="built_in">console</span>.info(shareTickets + <span class="string">&#x27;成功&#x27;</span>);</span><br><span class="line">           <span class="comment">// 转发成功</span></span><br><span class="line">         &#125;,</span><br><span class="line">         fail: <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">           <span class="built_in">console</span>.log(res + <span class="string">&#x27;失败&#x27;</span>);</span><br><span class="line">           <span class="comment">// 转发失败</span></span><br><span class="line">         &#125;,</span><br><span class="line">         complete:<span class="function"><span class="keyword">function</span>(<span class="params">res</span>)</span>&#123;</span><br><span class="line">           <span class="comment">// 不管成功失败都会执行</span></span><br><span class="line">         &#125;</span><br><span class="line">       &#125;</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
-<h5 id="3-带参数跳转"><a href="#3-带参数跳转" class="headerlink" title="3. 带参数跳转"></a>3. 带参数跳转</h5><p>在微信小程序中，跳转有普通导航跳转和tabar跳转。在mpvue框架中进行跳转可以使用 ** a 标签  **去实现，也可以使用 ** wx.navigateTo()  **。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 跳转</span></span><br><span class="line">wx.navigateTo(&#123; <span class="attr">url</span>: <span class="string">&#x27;pages/detail/main?id&#x27;</span>+<span class="built_in">this</span>.video.id&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 目的页面，参数的接收</span></span><br><span class="line"><span class="built_in">this</span>.videoId = <span class="built_in">this</span>.$root.$mp.query.id</span><br></pre></td></tr></table></figure>
-<h5 id="4-使用-scss-书写css"><a href="#4-使用-scss-书写css" class="headerlink" title="4. 使用 scss 书写css"></a>4. 使用 scss 书写css</h5><p>首先需要安装node-scss 和 scss-loader</p>
+
+<h5 id="3-带参数跳转"><a href="#3-带参数跳转" class="headerlink" title="3. 带参数跳转"></a>3. 带参数跳转</h5><p>在微信小程序中，跳转有普通导航跳转和 tabar 跳转。在 mpvue 框架中进行跳转可以使用 ** a 标签 **去实现，也可以使用 ** wx.navigateTo() **。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 跳转</span></span><br><span class="line">wx.navigateTo(&#123; <span class="attr">url</span>: <span class="string">&quot;pages/detail/main?id&quot;</span> + <span class="built_in">this</span>.video.id &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 目的页面，参数的接收</span></span><br><span class="line"><span class="built_in">this</span>.videoId = <span class="built_in">this</span>.$root.$mp.query.id;</span><br></pre></td></tr></table></figure>
+
+<h5 id="4-使用-scss-书写-css"><a href="#4-使用-scss-书写-css" class="headerlink" title="4. 使用 scss 书写 css"></a>4. 使用 scss 书写 css</h5><p>首先需要安装 node-scss 和 scss-loader</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install scss-loader --save-dev</span><br><span class="line">npm install node-scss --save-dev</span><br></pre></td></tr></table></figure>
-<p>安装完毕就可以这样书写css代码了</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">lang</span>=<span class="string">&#x27;scss&#x27;</span> <span class="attr">scoped</span>&gt;</span></span><br><span class="line"><span class="css">  <span class="selector-class">.video</span> &#123;</span></span><br><span class="line">    margin-bottom: 10px;</span><br><span class="line">    overflow: hidden;</span><br><span class="line"><span class="css">    <span class="selector-class">.video-img</span> &#123;</span></span><br><span class="line">      overflow: hidden;</span><br><span class="line">      width: 100%;</span><br><span class="line">    &#125;</span><br><span class="line"> &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>安装完毕就可以这样书写 css 代码了</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">lang</span>=<span class="string">&quot;scss&quot;</span> <span class="attr">scoped</span>&gt;</span></span><br><span class="line"><span class="css">  <span class="selector-class">.video</span> &#123;</span></span><br><span class="line">    margin-bottom: 10px;</span><br><span class="line">    overflow: hidden;</span><br><span class="line"><span class="css">    <span class="selector-class">.video-img</span> &#123;</span></span><br><span class="line">      overflow: hidden;</span><br><span class="line">      width: 100%;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p>如果安装完，** <style lang='scss' scoped></style> ** 嵌套的代码，不智能提示，及 ** {}** 有红色波浪线警告，可以采用如下解决方案。</p>
-<p>在VsCode编辑器中，点击 文件-首选项-设置 增加一下几行配置即可。</p>
+<p>在 VsCode 编辑器中，点击 文件-首选项-设置 增加一下几行配置即可。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&quot;files.associations&quot;: &#123;</span><br><span class="line">	&quot;*.css&quot;: &quot;scss&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h5 id="5-mpvue中如何使用vuex"><a href="#5-mpvue中如何使用vuex" class="headerlink" title="5.mpvue中如何使用vuex"></a>5.mpvue中如何使用vuex</h5><p>在pages根目录下创建stores的目录，并且新建 3个文件</p>
+
+<h5 id="5-mpvue-中如何使用-vuex"><a href="#5-mpvue-中如何使用-vuex" class="headerlink" title="5.mpvue 中如何使用 vuex"></a>5.mpvue 中如何使用 vuex</h5><p>在 pages 根目录下创建 stores 的目录，并且新建 3 个文件</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">index.js</span><br><span class="line">mutation-types.js</span><br><span class="line">mutations.js</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// mutation-types.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取上次播放ID 用于结束上次播放的视频</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> VideoPlayId = <span class="string">&#x27;VideoPlayId&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取微信用户信息 存有 openID</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> UserInfor = <span class="string">&#x27;UserInfor&#x27;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// mutation-types.js</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取上次播放ID 用于结束上次播放的视频</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> VideoPlayId = <span class="string">&quot;VideoPlayId&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取微信用户信息 存有 openID</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> UserInfor = <span class="string">&quot;UserInfor&quot;</span>;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// mutations.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; VideoPlayId, UserInfor &#125; <span class="keyword">from</span> <span class="string">&#x27;./mutation-types&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    [VideoPlayId](state, v) &#123;</span><br><span class="line">        state.videoPlayId = v</span><br><span class="line">    &#125;,</span><br><span class="line">    [UserInfor](state, v) &#123;</span><br><span class="line">        state.userInfo = v</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// mutations.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; VideoPlayId, UserInfor &#125; <span class="keyword">from</span> <span class="string">&quot;./mutation-types&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  [VideoPlayId](state, v) &#123;</span><br><span class="line">    state.videoPlayId = v;</span><br><span class="line">  &#125;,</span><br><span class="line">  [UserInfor](state, v) &#123;</span><br><span class="line">    state.userInfo = v;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> Vuex <span class="keyword">from</span> <span class="string">&#x27;vuex&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> mutations <span class="keyword">from</span> <span class="string">&#x27;./mutations&#x27;</span></span><br><span class="line"></span><br><span class="line">Vue.use(Vuex)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> state = &#123;</span><br><span class="line">    videoPlayId: -<span class="number">1</span>,</span><br><span class="line">    userInfo: &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Vuex.Store(&#123;</span><br><span class="line">    state,</span><br><span class="line">    mutations</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>绑定Store 到mpvue</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">&#x27;./App&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 导入Store</span></span><br><span class="line"><span class="keyword">import</span> Store <span class="keyword">from</span> <span class="string">&#x27;./stores&#x27;</span></span><br><span class="line"></span><br><span class="line">Vue.config.productionTip = <span class="literal">false</span></span><br><span class="line">App.mpType = <span class="string">&#x27;app&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 绑定</span></span><br><span class="line">Vue.prototype.$store = Store</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Vue(App)</span><br><span class="line">app.$mount()</span><br></pre></td></tr></table></figure>
-<p>在使用的地方，需要吧state定义的变量，及触发的方法导出。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;button :<span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;&#123;logged: isLogged&#125;&quot;</span> </span><br><span class="line">			open-type=<span class="string">&quot;getUserInfo&quot;</span> :lang=<span class="string">&quot;zh_CN&quot;</span> </span><br><span class="line">			@click=<span class="string">&quot;doLogin&quot;</span></span><br><span class="line">	&gt;获取用户信息&lt;/button&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ---开始 vuex </span></span><br><span class="line"><span class="keyword">import</span> &#123; mapState, mapMutations &#125; <span class="keyword">from</span> <span class="string">&#x27;vuex&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; UserInfor &#125; <span class="keyword">from</span> <span class="string">&#x27;@/stores/mutation-types&#x27;</span></span><br><span class="line"><span class="comment">// ---结束 vuex</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; get, showSuccess, showModal &#125; <span class="keyword">from</span> <span class="string">&#x27;@/utils/index&#x27;</span></span><br><span class="line"><span class="keyword">import</span> qcloud <span class="keyword">from</span> <span class="string">&#x27;wafer2-client-sdk&#x27;</span></span><br><span class="line"><span class="keyword">import</span> config <span class="keyword">from</span> <span class="string">&#x27;./../../config&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  data () &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  computed:&#123;</span><br><span class="line">    <span class="comment">// --- 导出 state 定义的 userInfo 变量</span></span><br><span class="line">    ...mapState([</span><br><span class="line">      <span class="string">&#x27;userInfo&#x27;</span></span><br><span class="line">    ]),</span><br><span class="line">    isLogged () &#123;</span><br><span class="line">      <span class="keyword">return</span> !!<span class="built_in">this</span>.userInfo[<span class="string">&#x27;openId&#x27;</span>];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    <span class="comment">/* --- 导出 Mutations 定义的 UserInfor变量用来，</span></span><br><span class="line"><span class="comment">		   修改Store.state的userInfo值 */</span></span><br><span class="line">    ...mapMutations([</span><br><span class="line">      UserInfor</span><br><span class="line">    ]),</span><br><span class="line">    <span class="function"><span class="title">doLogin</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      qcloud.login(&#123;</span><br><span class="line">        success: <span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">		  <span class="comment">// 调用Store 方法去修改</span></span><br><span class="line">          <span class="built_in">this</span>[UserInfor](res)</span><br><span class="line">          <span class="comment">// this.userInfo // 可以 直接访问</span></span><br><span class="line">        &#125;,</span><br><span class="line">        fail: <span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">          <span class="built_in">this</span>[UserInfor](&#123;&#125;)</span><br><span class="line">          showModal(<span class="string">&#x27;登录错误&#x27;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">.logged&#123;</span><br><span class="line">  display: none;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">&quot;vue&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> Vuex <span class="keyword">from</span> <span class="string">&quot;vuex&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> mutations <span class="keyword">from</span> <span class="string">&quot;./mutations&quot;</span>;</span><br><span class="line"></span><br><span class="line">Vue.use(Vuex);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> state = &#123;</span><br><span class="line">  videoPlayId: -<span class="number">1</span>,</span><br><span class="line">  userInfo: &#123;&#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Vuex.Store(&#123;</span><br><span class="line">  state,</span><br><span class="line">  mutations,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
+<p>绑定 Store 到 mpvue</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">&quot;vue&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">&quot;./App&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 导入Store</span></span><br><span class="line"><span class="keyword">import</span> Store <span class="keyword">from</span> <span class="string">&quot;./stores&quot;</span>;</span><br><span class="line"></span><br><span class="line">Vue.config.productionTip = <span class="literal">false</span>;</span><br><span class="line">App.mpType = <span class="string">&quot;app&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 绑定</span></span><br><span class="line">Vue.prototype.$store = Store;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Vue(App);</span><br><span class="line">app.$mount();</span><br></pre></td></tr></table></figure>
 
+<p>在使用的地方，需要吧 state 定义的变量，及触发的方法导出。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;button :<span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;&#123;logged: isLogged&#125;&quot;</span></span><br><span class="line">			open-type=<span class="string">&quot;getUserInfo&quot;</span> :lang=<span class="string">&quot;zh_CN&quot;</span></span><br><span class="line">			@click=<span class="string">&quot;doLogin&quot;</span></span><br><span class="line">	&gt;获取用户信息&lt;/button&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ---开始 vuex</span></span><br><span class="line"><span class="keyword">import</span> &#123; mapState, mapMutations &#125; <span class="keyword">from</span> <span class="string">&#x27;vuex&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; UserInfor &#125; <span class="keyword">from</span> <span class="string">&#x27;@/stores/mutation-types&#x27;</span></span><br><span class="line"><span class="comment">// ---结束 vuex</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; get, showSuccess, showModal &#125; <span class="keyword">from</span> <span class="string">&#x27;@/utils/index&#x27;</span></span><br><span class="line"><span class="keyword">import</span> qcloud <span class="keyword">from</span> <span class="string">&#x27;wafer2-client-sdk&#x27;</span></span><br><span class="line"><span class="keyword">import</span> config <span class="keyword">from</span> <span class="string">&#x27;./../../config&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  data () &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  computed:&#123;</span><br><span class="line">    <span class="comment">// --- 导出 state 定义的 userInfo 变量</span></span><br><span class="line">    ...mapState([</span><br><span class="line">      <span class="string">&#x27;userInfo&#x27;</span></span><br><span class="line">    ]),</span><br><span class="line">    isLogged () &#123;</span><br><span class="line">      <span class="keyword">return</span> !!<span class="built_in">this</span>.userInfo[<span class="string">&#x27;openId&#x27;</span>];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    <span class="comment">/* --- 导出 Mutations 定义的 UserInfor变量用来，</span></span><br><span class="line"><span class="comment">		   修改Store.state的userInfo值 */</span></span><br><span class="line">    ...mapMutations([</span><br><span class="line">      UserInfor</span><br><span class="line">    ]),</span><br><span class="line">    <span class="function"><span class="title">doLogin</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      qcloud.login(&#123;</span><br><span class="line">        success: <span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">		  <span class="comment">// 调用Store 方法去修改</span></span><br><span class="line">          <span class="built_in">this</span>[UserInfor](res)</span><br><span class="line">          <span class="comment">// this.userInfo // 可以 直接访问</span></span><br><span class="line">        &#125;,</span><br><span class="line">        fail: <span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">          <span class="built_in">this</span>[UserInfor](&#123;&#125;)</span><br><span class="line">          showModal(<span class="string">&#x27;登录错误&#x27;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">.logged&#123;</span><br><span class="line">  display: none;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h3 id="作品展示"><a href="#作品展示" class="headerlink" title="作品展示"></a>作品展示</h3><img src="/posts/88e91fb0/1.png" class="" width="260" title="点赞页面">
 <img src="/posts/88e91fb0/2.png" class="" width="260" title="播放页">
